@@ -26,7 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/transactions")
+@app.get("/api/transactions/")
 async def get_transactions():
     response = await fetch_all_transactions()
     return response
@@ -47,7 +47,7 @@ async def post_transaction(transaction: Transaction):
         return response
     raise HTTPException(400, "Something went wrong")
 
-@app.put("/api/transactions/{id}/", response_model=Transaction)
+@app.put("/api/transactions/{id}", response_model=Transaction)
 async def put_transaction(amount, category, type, date, id):
     response = await update_transaction(amount, category, type, date, id)
     if response:
@@ -56,6 +56,7 @@ async def put_transaction(amount, category, type, date, id):
 
 @app.delete("/api/transactions/{id}")
 async def delete_transaction(id):
+    print(id)
     response = await remove_transaction(id)
     if response:
         return f"Successfully deleted transaction with id {id}"

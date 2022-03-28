@@ -1,23 +1,37 @@
+import axios from "axios";
 // state is our transactions list
 
 const contextReducer = (state, action) => {
   let transactions
   switch (action.type) {
     case "FETCH_SUCCESS":
-      console.log(JSON.stringify(action.payload));
-      // return []
       return action.payload
 
     case "DELETE_TRANSACTION":
+      console.log("deleting..."+action.payload);
       transactions = state.filter((t) => t.id !== action.payload);
-      localStorage.setItem('transactions', JSON.stringify(transactions))
-      // TODO tutaj zaktualizować w mongo itemsy
+
+      axios.delete('http://localhost:8000/api/transactions/'+action.payload)
+        .then(res => {
+          console.log("succesfully deleted transaction");
+        })
+        .catch(err => {
+          console.log("error deleting transaction");
+          return state
+        })
 
       return transactions
     case "ADD_TRANSACTION":
       transactions = [action.payload, ...state]
-      localStorage.setItem('transactions', JSON.stringify(transactions))
-      // TODO tutaj zaktualizować w mongo itemsy
+      
+      axios.post("http://localhost:8000/api/transactions/", action.payload)
+        .then(res => {
+          console.log("succesfully added transaction");
+        })
+        .catch(err => {
+          console.log("error adding transaction");
+          return state
+        })
 
       return transactions
     default:

@@ -14,7 +14,7 @@ export const Provider = ({children}) => {
 
   // fetch data from mongo db
   useEffect(() => {
-    axios.get("http://localhost:8000/api/transactions")
+    axios.get("http://localhost:8000/api/transactions/")
       .then(res => {
         dispatch({type:"FETCH_SUCCESS", payload:res.data})
       })
