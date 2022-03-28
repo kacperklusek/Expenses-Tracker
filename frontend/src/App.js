@@ -26,7 +26,7 @@ const App = () => {
         <Grid item xs={11} sm={4} className={classes.mobile}>
           <Details title="Income"/>
         </Grid>
-        <Grid ref={main} item xs={12} sm={3} style={{'minWidth': '325px'}} className={classes.main}>
+        <Grid ref={main} item xs={11} sm={6} style={{'minWidth': '325px'}} className={classes.main}>
           <Main/>
         </Grid>
         <Grid item xs={11} sm={4} className={classes.desktop}>
