@@ -58,7 +58,7 @@ const FormPeriodical = () => {
       <Grid item xs={6}>
         <FormControl fullWidth>
           <InputLabel>Type</InputLabel>
-          <Select
+          <Select fullWidth
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
           >
@@ -68,9 +68,9 @@ const FormPeriodical = () => {
         </FormControl>
       </Grid>
       <Grid item xs={6}>
-        <FormControl>
+        <FormControl fullWidth>
           <InputLabel>Category</InputLabel>
-          <Select
+          <Select fullWidth
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
@@ -101,9 +101,9 @@ const FormPeriodical = () => {
           onChange={(e) => setFormData({ ...formData, period: e.target.value })} />
       </Grid>
       <Grid item xs={6}>
-        <FormControl>
+        <FormControl fullWidth>
           <InputLabel>Type</InputLabel>
-          <Select
+          <Select fullWidth
             value={formData.periodType}
             onChange={(e) => setFormData({ ...formData, periodType: e.target.value })}
           >
