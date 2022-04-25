@@ -23,8 +23,21 @@ const contextReducer = (state, action) => {
       return transactions
     case "ADD_TRANSACTION":
       transactions = [action.payload, ...state]
-      
-      axios.post("http://localhost:8000/api/transactions/", action.payload)
+      console.log(action.payload);
+
+
+      // if (action.payload.finalDate !== undefined) {
+      //   console.log("PERDIODIC");
+      //   axios.post("http://localhost:8000/api/transactions_periodic/", action.payload)
+      //   .then(res => {
+      //     console.log("succesfully added transaction");
+      //   })
+      //   .catch(err => {
+      //     console.log("error adding transaction");
+      //     return state
+      //   })
+      // } else {
+        axios.post("http://localhost:8000/api/transactions/", action.payload)
         .then(res => {
           console.log("succesfully added transaction");
         })
@@ -32,6 +45,8 @@ const contextReducer = (state, action) => {
           console.log("error adding transaction");
           return state
         })
+      // }
+           
 
       return transactions
     default:

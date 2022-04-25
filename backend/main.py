@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 import uuid
-from model import Transaction
+from model import Transaction, PeriodicTransaction
 
 from database import (
     fetch_one_transaction,

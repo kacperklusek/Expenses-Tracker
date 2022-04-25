@@ -40,7 +40,7 @@ const Form = () => {
     if (segment) {
       if (segment.intent.intent === 'add_expense') {
         setFormData({...formData, type: 'Expense'})
-      } else if (segment.intent.intet === "add_income") {
+      } else if (segment.intent.intent === "add_income") {
         setFormData({...formData, type: "Income"})
       } else if (segment.isFinal && segment.intent.intent === "create_transaction") {
         return createTransaction();
@@ -107,7 +107,8 @@ const Form = () => {
             onChange={(e) => setFormData({...formData, category: e.target.value})}
             >
             {selectedCategories.map((c) => 
-            <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)}
+            <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)
+            }
           </Select>
         </FormControl>
       </Grid>

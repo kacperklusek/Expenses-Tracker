@@ -33,7 +33,10 @@ async def create_transaction(tran):
 
 
 async def update_transaction(amount, category, type, date, id):
-    await collection.update_one({"id": id}, {"$set": {"amount": amount, "category": category, "type": type, "date": date}})
+    await collection.update_one({"id": id}, {"$set": {"amount": amount,
+                                                      "category": category,
+                                                      "type": type,
+                                                      "date": date}})
     document = await collection.find_one({"id": id})
     return document
 
