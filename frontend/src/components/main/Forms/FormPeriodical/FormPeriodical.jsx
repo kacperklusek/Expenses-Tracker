@@ -1,14 +1,14 @@
 import transitions from '@material-ui/core/styles/transitions'
 import { TextField, Typography, Checkbox, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
-import { CustomizedSnackbar } from '../../Snackbar/Snackbar'
+import { CustomizedSnackbar } from '../../../Snackbar/Snackbar'
 // import { useSpeechContext } from '@speechly/react-client'
 import { v4 as uuidv4 } from "uuid"
 import React, { useState, useContext } from 'react'
-import { ExpenseTrackerContext } from '../../../context/context'
-import formatDate from '../../../utils/formatDate'
+import { ExpenseTrackerContext } from '../../../../context/context'
+import formatDate from '../../../../utils/formatDate'
 
 import useStyles from "./styles"
-import { expenseCategories, incomeCategories } from '../../../constants/categories'
+import { expenseCategories, incomeCategories } from '../../../../constants/categories'
 
 const initialState = {
   amount: '',
@@ -29,7 +29,7 @@ const FormPeriodical = () => {
   const [open, setOpen] = useState(false)
 
   const createTransaction = () => {
-    if (Number.isNaN(Number(formData.amount)) || !formData.date.includes('-')) return
+    if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.category === '' || formData.periodType === '' || !formData.date.includes('-')) return
 
     const transaction = {
       ...formData,

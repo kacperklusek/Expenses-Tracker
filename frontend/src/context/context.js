@@ -1,4 +1,4 @@
-import React, {useReducer, createContext, useEffect} from "react";
+import React, { useReducer, createContext, useEffect } from "react";
 
 import contextReducer from './contextReducer'
 import axios from 'axios'
@@ -9,14 +9,14 @@ const initialState = [];
 
 export const ExpenseTrackerContext = createContext(initialState)
 
-export const Provider = ({children}) => {
+export const Provider = ({ children }) => {
   const [transactions, dispatch] = useReducer(contextReducer, initialState)
 
   // fetch data from mongo db
   useEffect(() => {
     axios.get("http://localhost:8000/api/transactions/")
       .then(res => {
-        dispatch({type:"FETCH_SUCCESS", payload:res.data})
+        dispatch({ type: "FETCH_SUCCESS", payload: res.data })
       })
       .catch(err => {
         console.log(err);
@@ -24,20 +24,20 @@ export const Provider = ({children}) => {
   }, [])
 
   // Action Creators
-  const deleteTransaction = (id) => dispatch({ type: "DELETE_TRANSACTION", payload: id})
-  const addTransaction = (transaction) => dispatch({ type: "ADD_TRANSACTION", payload: transaction})
-  
-  const balance = transactions.reduce((acc, currVal) => {
+  const deleteTransaction = (id) => dispatch({ type: "DELETE_TRANSACTION", payload: id })
+  const addTransaction = (transaction) => dispatch({ type: "ADD_TRANSACTION", payload: transaction })
+
+  const balance = transactions.filter(t => t.period === null).reduce((acc, currVal) => {
     return (currVal.type === "Expense" ? acc - currVal.amount : acc + currVal.amount)
   }, 0)
 
   return (
-    <ExpenseTrackerContext.Provider value={{ 
-      deleteTransaction, 
+    <ExpenseTrackerContext.Provider value={{
+      deleteTransaction,
       addTransaction,
       transactions,
       balance
-      }}>
+    }}>
       {children}
     </ExpenseTrackerContext.Provider>
   )

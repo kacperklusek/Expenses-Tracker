@@ -6,13 +6,14 @@ import { incomeCategories, expenseCategories, resetCategories } from "./constant
 const useTransactions = (title) => {
   resetCategories()
   const { transactions } = useContext(ExpenseTrackerContext)
-  const transactionsPerType = transactions.filter((t) => t.type === title)
+  // only with given title and non periodical
+  const transactionsPerType = transactions.filter((t) => t.type === title && t.period === null)
   // code below just sums all elements
   const total = transactionsPerType.reduce((acc, currVal) => acc += currVal.amount, 0)
   const categories = title === "Income" ? incomeCategories : expenseCategories
 
   transactionsPerType.forEach((t) => {
-    const category = categories.find((c) => c.type === t.category)    
+    const category = categories.find((c) => c.type === t.category)
 
     if (category) category.amount += t.amount
   });
@@ -28,7 +29,7 @@ const useTransactions = (title) => {
     }]
   }
 
-  return{total, chartData}
+  return { total, chartData }
 }
 
 export default useTransactions

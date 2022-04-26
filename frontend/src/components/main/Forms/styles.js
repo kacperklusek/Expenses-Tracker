@@ -21,7 +21,4 @@ export default makeStyles((theme) => ({
   divider: {
     margin: '20px 0',
   },
-  root: {
-    minHeight: '541.39px'
-  }
 }));

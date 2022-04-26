@@ -11,7 +11,7 @@ const List = () => {
 
   return (
     <MUIList dense={false} className={classes.list}>
-      {transactions.filter(t => t.period === null).map((transaction) => (
+      {transactions.filter(t => t.period !== null).map((transaction) => (
         <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
           <ListItem>
             <ListItemAvatar>
@@ -19,7 +19,11 @@ const List = () => {
                 <MoneyOff />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={transaction.category} secondary={`$${transaction.amount} - ${transaction.date}`} />
+            <ListItemText
+              primary={`${transaction.category} -  $${transaction.amount}`}
+              secondary={
+                `since ${transaction.date} - ${transaction.period} time${transaction.period > 1 ? 's' : ''} every ${transaction.periodType}`
+              } />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label='delete' onClick={() => deleteTransaction(transaction.id)}>
                 <Delete />

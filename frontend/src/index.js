@@ -6,6 +6,7 @@ import { Provider } from './context/context'
 import App from "./App"
 import "./index.css"
 
+
 ReactDOM.render(
   <SpeechProvider appId='c9be4f98-f956-4dd1-9f16-f9e606bc3ffe' language='en-US'>
     <Provider>
@@ -13,4 +14,4 @@ ReactDOM.render(
     </Provider>
   </SpeechProvider>,
   document.getElementById("root")
-  )
+)
