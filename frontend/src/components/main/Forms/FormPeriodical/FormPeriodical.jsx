@@ -41,7 +41,16 @@ const FormPeriodical = () => {
     transaction.finalDate = finalDate ? transaction.finalDate : null
 
     setOpen(true)
+    // add periodical
     addTransaction(transaction)
+
+    // add first payment
+    transaction.period = null;
+    transaction.periodType = null;
+    transaction.finalDate = null;
+    transaction.periodical = true;
+    addTransaction(transaction)
+
     setFormData(initialState)
   }
 

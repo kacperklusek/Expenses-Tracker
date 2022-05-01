@@ -10,6 +10,7 @@ class Transaction(BaseModel):
     type: str
     date: str
     finalDate: str | None
+    periodical: bool | None
     period: int | None
     periodType: str | None
     id: str

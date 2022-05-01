@@ -22,7 +22,7 @@ const List = () => {
             <ListItemText
               primary={`${transaction.category} -  $${transaction.amount}`}
               secondary={
-                `since ${transaction.date} - ${transaction.period} time${transaction.period > 1 ? 's' : ''} every ${transaction.periodType}`
+                `since ${transaction.date} - every ${transaction.period > 1 ? transaction.period : ''} ${transaction.periodType}${transaction.period > 1 ? 's' : ''}`
               } />
             <ListItemSecondaryAction>
               <IconButton edge="end" aria-label='delete' onClick={() => deleteTransaction(transaction.id)}>
