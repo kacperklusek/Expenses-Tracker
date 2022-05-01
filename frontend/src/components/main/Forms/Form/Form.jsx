@@ -32,8 +32,9 @@ const Form = () => {
       amount: Number(formData.amount),
       id: uuidv4()
     }
-
+    
     setOpen(true)
+    transaction.period = null;    
     addTransaction(transaction)
     setFormData(initialState)
   }

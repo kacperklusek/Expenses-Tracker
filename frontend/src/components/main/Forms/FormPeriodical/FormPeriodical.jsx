@@ -31,7 +31,7 @@ const FormPeriodical = () => {
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.category === '' || formData.periodType === '' || !formData.date.includes('-')) return
 
-    const transaction = {
+    var transaction = {
       ...formData,
       amount: Number(formData.amount),
       period: Number(formData.period),
@@ -44,13 +44,23 @@ const FormPeriodical = () => {
     // add periodical
     addTransaction(transaction)
 
-    // add first payment
-    transaction.period = null;
-    transaction.periodType = null;
-    transaction.finalDate = null;
-    transaction.periodical = true;
-    addTransaction(transaction)
+    // transaction.period = null;
+    // transaction.periodType = null;
+    // transaction.finalDate = null;
+    // transaction.periodical = true;
+    // addTransaction(transaction)
 
+    setFormData(initialState)
+
+    // add first payment
+    transaction = {
+      ...formData,
+      amount: Number(formData.amount),
+      id: uuidv4()
+    }
+    setOpen(true)
+    transaction.period = null;    
+    addTransaction(transaction)
     setFormData(initialState)
   }
 
