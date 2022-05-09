@@ -26,15 +26,12 @@ const App = () => {
         <Grid item xs={11} sm={4} className={classes.mobile}>
           <DetailWrapper/>
         </Grid>
+        <Grid item xs={11} sm={4} className={classes.desktop}>
+          <DetailWrapper/>
+        </Grid>
         <Grid ref={main} item xs={11} sm={6} style={{ 'minWidth': '325px' }} className={classes.main}>
           <Main />
         </Grid>
-        {/* <Grid item xs={11} sm={4} className={classes.desktop}>
-          <Details title="Income" />
-        </Grid>
-        <Grid item xs={11} sm={4} className={classes.last}>
-          <Details title="Expense" />
-        </Grid> */}
       </Grid>
       {/* <PushToTalkButtonContainer>
         <PushToTalkButton />
