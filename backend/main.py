@@ -4,7 +4,7 @@ from model import Transaction, User, Category, PeriodicalTransaction
 
 from database import (
     fetch_one_transaction,
-    # fetch_all_transactions,
+    push_transaction,
     # create_transaction,
     # update_transaction,
     # remove_transaction,
@@ -27,14 +27,13 @@ app.add_middleware(
 )
 
 @app.get("/api/transactions/{uid}/{id}")
-async def get_transaction(uid, id):
-    response = await fetch_one_transaction(uid, id)
+async def get_transaction(uid: int, tid: int):
+    response = await fetch_one_transaction(uid, tid)
     return response
 
-@app.post("/api/transactions/{uid}/")
-async def add_transaction(uid, transaction):
-    print(transaction)
-    response = await add_transaction(uid, transaction)
+@app.post("/api/transactions/{uid}", response_model=Transaction)
+async def add_transaction(uid: int, transaction: Transaction):
+    response = await push_transaction(uid, transaction)
     return response
 
 #

@@ -13,9 +13,6 @@ collection = database.Users
 
 
 async def fetch_one_transaction(user_id, id):
-    user_id = int(user_id)
-    id = int(id)
-
     pipeline = [
         {"$match": {
             '_id': user_id,
@@ -35,17 +32,17 @@ async def fetch_one_transaction(user_id, id):
 
     return document
 
-async def add_transaction(user_id, transaction):
-    user_id = int(user_id)
+async def push_transaction(user_id, transaction):
+    transaction.category = dict(transaction.category)
 
     pipeline = [
         {'_id': user_id},
-        {'$push': {'transactions': transaction}}
+        {'$push': {'transactions': dict(transaction)}}
     ]
 
-    await collection.update(pipeline)
+    await collection.update_one(*pipeline)
 
-    return collection
+    return transaction
 
 
 # async def fetch_n_transactions(n):
