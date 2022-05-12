@@ -1,22 +1,49 @@
 from typing import List, Optional
 from xmlrpc.client import boolean
-from pydantic import BaseModel
+
+from bson import ObjectId
+from bson.errors import InvalidId
+from pydantic import BaseModel, BaseConfig
 from typing import List
 from datetime import date, datetime
 
 
-class Category(BaseModel):
+class OID(str):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, v):
+        try:
+            return ObjectId(str(v))
+        except InvalidId:
+            raise ValueError("Not a valid ObjectId")
+
+
+class MongoModel(BaseModel):
+    class Config(BaseConfig):
+        json_encoders = {
+            ObjectId: lambda oid: str(oid),
+            datetime: lambda dt: str(dt),
+        }
+
+
+class Category(MongoModel):
+    id: OID | None
     type: str
     name: str
 
 
-class Transaction(BaseModel):
+class Transaction(MongoModel):
+    id: OID | None
     category: Category
-    date: str
+    date: datetime
     amount: float
 
 
-class PeriodicalTransaction(BaseModel):
+class PeriodicalTransaction(MongoModel):
+    id: OID | None
     category: Category
     date: str
     finalDate: str
@@ -25,8 +52,7 @@ class PeriodicalTransaction(BaseModel):
     periodType: str
 
 
-class User(BaseModel):
-    # id: int
+class User(MongoModel):
     name: str
     surname: str
     email: str

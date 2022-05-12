@@ -34,59 +34,27 @@ INITIAL_CATEGORIES = [
 ]
 
 
-async def fetch_one_transaction(user_id, id):
+# Transactions CRUD
+
+async def fetch_one_transaction(user_id, tid):
     pipeline = [
         {"$match": {
             '_id': ObjectId(user_id),
         }},
         {'$unwind': '$transactions'},
         {'$match': {
-            'transactions._id': id
+            'transactions.id': ObjectId(tid)
         }},
         {'$replaceWith': '$transactions'},
         {'$limit': 1}
     ]
-
     cursor = collection.aggregate(pipeline)
-
     async for doc in cursor:
-        print(doc)
-        document = doc
+        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
+        doc['id'] = str(doc['id'])
+        return doc
+    return 1
 
-    return document
-
-async def push_transaction(user_id, transaction):
-    transaction.category = dict(transaction.category)
-
-    pipeline = [
-        {'_id': ObjectId(user_id)},
-        {'$push': {'transactions': dict(transaction)}}
-    ]
-
-    await collection.update_one(*pipeline)
-
-    return transaction
-
-
-async def add_user(usr):
-    # usr = {
-    #     'name': name,
-    #     'surname': surname,
-    #     'email': email,
-    #     # 'categories': [dict(cat) for cat in INITIAL_CATEGORIES],
-    #     "categories": [],
-    #     "transactions": [],
-    #     "periodical_transactions": [],
-    #     "balance": 0.0
-    # }
-    res = await collection.insert_one(dict(usr))
-    print(res.inserted_id)
-
-    return usr, res.inserted_id
-
-async def get_id(email):
-    res = await collection.find_one({"email": email})
-    return res
 
 async def fetch_n_transactions(user_id, have, n):
     pipeline = [
@@ -95,6 +63,7 @@ async def fetch_n_transactions(user_id, have, n):
         }},
         {'$unwind': '$transactions'},
         {'$replaceWith': '$transactions'},
+        {"$sort": {"date": -1}},
         {"$limit": n},
         {"$skip": have}
     ]
@@ -103,12 +72,52 @@ async def fetch_n_transactions(user_id, have, n):
     cursor = collection.aggregate(pipeline)
 
     async for doc in cursor:
+        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
+        doc['id'] = str(doc['id'])
         transactions.append(doc)
 
     return transactions
 
 
-#
+async def push_transaction(user_id, transaction):
+    transaction.category = dict(transaction.category)
+    transaction.id = ObjectId()
+    pipeline = [
+        {'_id': ObjectId(user_id)},
+        {'$push': {'transactions': dict(transaction)}}
+    ]
+    await collection.update_one(*pipeline)
+
+    return transaction
+
+
+async def remove_transaction(uid, tid):
+    pipeline = [
+        {"_id": ObjectId(uid)},
+        {"$pull": {
+            "transactions": {"id": tid}
+        }}
+    ]
+
+    res = await collection.update_one(*pipeline)
+    print(res)
+    return True
+
+
+
+
+async def add_user(usr):
+    res = await collection.insert_one(dict(usr))
+    print(res.inserted_id)
+
+    return usr, res.inserted_id
+
+
+async def get_id(email):
+    res = await collection.find_one({"email": email})
+    return res
+
+
 #
 # async def fetch_all_transactions():
 #     transactions = []
@@ -116,24 +125,8 @@ async def fetch_n_transactions(user_id, have, n):
 #     async for document in cursor:
 #         transactions.append(Transaction(**document))
 #     return transactions
+
+
 #
-#
-# async def create_transaction(tran):
-#     document = tran
-#     await collection.insert_one(document)
-#     return document
-#
-#
-# async def update_transaction(amount, category, type, date, id):
-#     await collection.update_one({"id": id}, {"$set": {"amount": amount,
-#                                                       "category": category,
-#                                                       "type": type,
-#                                                       "date": date}})
-#     document = await collection.find_one({"id": id})
-#     return document
-#
-#
-# async def remove_transaction(id):
-#     await collection.delete_one({"id": id})
-#     return True
+
 
