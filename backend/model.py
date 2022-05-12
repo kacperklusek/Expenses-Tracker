@@ -2,26 +2,39 @@
 # Pydantic allows auto creation of JSON Schemas from models
 from xmlrpc.client import boolean
 from pydantic import BaseModel
+from typing import List
+from datetime import date, datetime
 
+class Category(BaseModel):
+    type: str
+    name: str
 
 class Transaction(BaseModel):
-    amount: int
-    category: str
-    type: str
-    date: str
-    finalDate: str | None
-    periodical: bool | None
-    period: int | None
-    periodType: str | None
-    id: str
+    category: Category
+    date: datetime.date
+    amount: float
 
-# dobrze by było dodać do bazy kategorie
-# i potem zamiast categories z constants
-# pobierać dane z bazy danych, wtedy użytkownik może dodawać własne kategorie
-# Dobrze by też było ustawić coś w stylu klucza głównego?
-# żeby nie było można dodawać kategori o tej samej nazwie
-# Postaram się to ogarnąć w wolnej chwili
-# class Category(BaseModel):
-#   name: str
-#   color: str
-#   user: boolean
+class PeriodicalTransaction(BaseModel):
+    category: Category
+    date: datetime.date
+    finalDate: datetime.date
+    amount: float
+    period: int
+    periodType: str
+
+class User(BaseModel):
+    name: str
+    surname: str
+    categories: List[Category]
+
+
+# class Transaction(BaseModel):
+#     amount: int
+#     category: str
+#     type: str
+#     date: str
+#     finalDate: str | None
+#     periodical: bool | None
+#     period: int | None
+#     periodType: str | None
+#     id: str
