@@ -1,10 +1,11 @@
 from fastapi import FastAPI, HTTPException
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction
+from model import Transaction, User, Category, PeriodicalTransaction, NewUser
 
 from database import (
     fetch_one_transaction,
     push_transaction,
+    add_user
     # create_transaction,
     # update_transaction,
     # remove_transaction,
@@ -26,18 +27,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/transactions/{uid}/{id}")
+@app.get("/api/users/{uid}/{id}")
 async def get_transaction(uid: int, tid: int):
     response = await fetch_one_transaction(uid, tid)
     return response
 
-@app.post("/api/transactions/{uid}", response_model=Transaction)
+@app.post("/api/users/{uid}", response_model=Transaction)
 async def add_transaction(uid: int, transaction: Transaction):
     response = await push_transaction(uid, transaction)
     return response
 
-#
-#
+@app.post("/api/users", response_model=User)
+async def create_user(usr: User):
+    response = await add_user(usr)
+    return response
+
+
 # @app.get("/api/transactions/{id}", response_model=Transaction)
 # async def get_transaction_by_id(id):
 #     response = await fetch_one_transaction(id)

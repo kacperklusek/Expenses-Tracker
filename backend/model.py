@@ -33,3 +33,9 @@ class User(BaseModel):
     transactions: List[Transaction]
     periodical_transactions: List[PeriodicalTransaction]
     balance: float
+
+
+class NewUser(BaseModel):
+    name: str
+    surname: str
+    email: str

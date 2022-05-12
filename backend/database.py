@@ -1,6 +1,6 @@
 import motor.motor_asyncio
 import pymongo
-from model import Transaction
+from model import Transaction, User
 
 user = "test-user"
 password = "test-user-password"
@@ -9,7 +9,27 @@ client = motor.motor_asyncio.AsyncIOMotorClient(f'mongodb+srv://{user}:{password
 database = client.test
 collection = database.Users
 
+INITIAL_CATEGORIES = [
+    {"name": "Business",
+     "type": "Income"},
+    {"name": "Investments",
+     "type": "Income"},
+    {"name": "Gifts",
+     "type": "Income"},
+    {"name": "Lottery",
+     "type": "Income"},
 
+    {"name": "Car",
+     "type": "Expense"},
+    {"name": "Food",
+     "type": "Expense"},
+    {"name": "Shopping",
+     "type": "Expense"},
+    {"name": "Clothing",
+     "type": "Expense"},
+    {"name": "House",
+     "type": "Expense"}
+]
 
 
 async def fetch_one_transaction(user_id, id):
@@ -43,6 +63,22 @@ async def push_transaction(user_id, transaction):
     await collection.update_one(*pipeline)
 
     return transaction
+
+
+async def add_user(usr):
+    # usr = {
+    #     'name': name,
+    #     'surname': surname,
+    #     'email': email,
+    #     # 'categories': [dict(cat) for cat in INITIAL_CATEGORIES],
+    #     "categories": [],
+    #     "transactions": [],
+    #     "periodical_transactions": [],
+    #     "balance": 0.0
+    # }
+    await collection.insert_one(dict(usr))
+    return usr
+
 
 
 # async def fetch_n_transactions(n):
