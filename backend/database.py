@@ -1,6 +1,3 @@
-#  @bekbrace
-#  FARMSTACK Tutorial - Sunday 13.06.2021
-
 import motor.motor_asyncio
 import pymongo
 from model import Transaction
