@@ -1,5 +1,7 @@
 import motor.motor_asyncio
 import pymongo
+from bson import ObjectId
+
 from model import Transaction, User
 
 user = "test-user"
@@ -35,13 +37,14 @@ INITIAL_CATEGORIES = [
 async def fetch_one_transaction(user_id, id):
     pipeline = [
         {"$match": {
-            '_id': user_id,
+            '_id': ObjectId(user_id),
         }},
         {'$unwind': '$transactions'},
         {'$match': {
             'transactions._id': id
         }},
-        {'$replaceWith': '$transactions'}
+        {'$replaceWith': '$transactions'},
+        {'$limit': 1}
     ]
 
     cursor = collection.aggregate(pipeline)
@@ -56,7 +59,7 @@ async def push_transaction(user_id, transaction):
     transaction.category = dict(transaction.category)
 
     pipeline = [
-        {'_id': user_id},
+        {'_id': ObjectId(user_id)},
         {'$push': {'transactions': dict(transaction)}}
     ]
 
@@ -76,14 +79,35 @@ async def add_user(usr):
     #     "periodical_transactions": [],
     #     "balance": 0.0
     # }
-    await collection.insert_one(dict(usr))
-    return usr
+    res = await collection.insert_one(dict(usr))
+    print(res.inserted_id)
+
+    return usr, res.inserted_id
+
+async def get_id(email):
+    res = await collection.find_one({"email": email})
+    return res
+
+async def fetch_n_transactions(user_id, have, n):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$transactions'},
+        {'$replaceWith': '$transactions'},
+        {"$limit": n},
+        {"$skip": have}
+    ]
+
+    transactions = []
+    cursor = collection.aggregate(pipeline)
+
+    async for doc in cursor:
+        transactions.append(doc)
+
+    return transactions
 
 
-
-# async def fetch_n_transactions(n):
-#     transactions = []
-#     cursor = collection.find({}).sort({"date": 1})
 #
 #
 # async def fetch_all_transactions():

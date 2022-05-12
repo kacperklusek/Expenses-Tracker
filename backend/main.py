@@ -1,14 +1,13 @@
 from fastapi import FastAPI, HTTPException
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction, NewUser
+from model import Transaction, User, Category, PeriodicalTransaction
 
 from database import (
     fetch_one_transaction,
+    fetch_n_transactions,
     push_transaction,
-    add_user
-    # create_transaction,
-    # update_transaction,
-    # remove_transaction,
+    add_user,
+    get_id,
 )
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,13 +26,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
+@app.get("/api/users/{email}", response_model=str)
+async def login(email: str):
+    response = await get_id(email)
+    _id = str(response.get('_id'))
+    return _id
+
 @app.get("/api/users/{uid}/{id}")
-async def get_transaction(uid: int, tid: int):
+async def get_transaction(uid: str, tid: int):
     response = await fetch_one_transaction(uid, tid)
     return response
 
+# fetch n last transactions skippinh {have} transactions because you could have already fetched {have} transactions
+@app.get("/api/users/{uid}/{have}/{n}")
+async def get_n_transactions(uid: str, have: int, n: int):
+    response = await fetch_n_transactions(uid, have, n)
+    return response
+
 @app.post("/api/users/{uid}", response_model=Transaction)
-async def add_transaction(uid: int, transaction: Transaction):
+async def add_transaction(uid: str, transaction: Transaction):
     response = await push_transaction(uid, transaction)
     return response
 
@@ -41,6 +54,11 @@ async def add_transaction(uid: int, transaction: Transaction):
 async def create_user(usr: User):
     response = await add_user(usr)
     return response
+
+# TODO delete transaction
+
+
+
 
 
 # @app.get("/api/transactions/{id}", response_model=Transaction)
