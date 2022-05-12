@@ -12,14 +12,14 @@ class Category(BaseModel):
 
 class Transaction(BaseModel):
     category: Category
-    date: datetime.date
+    date: str
     amount: float
 
 
 class PeriodicalTransaction(BaseModel):
     category: Category
-    date: datetime.date
-    finalDate: datetime.date
+    date: str
+    finalDate: str
     amount: float
     period: int
     periodType: str
@@ -28,5 +28,8 @@ class PeriodicalTransaction(BaseModel):
 class User(BaseModel):
     name: str
     surname: str
+    email: str
     categories: List[Category]
-
+    transactions: List[Transaction]
+    periodical_transactions: List[PeriodicalTransaction]
+    balance: float
