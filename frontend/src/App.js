@@ -24,9 +24,9 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={() => setButtonPopup(true)}>
+      {/* <button onClick={() => setButtonPopup(true)}>
          Open Popup 
-      </button>
+      </button> */}
       <Grid className={classes.grid} container spacing={0} alignItems="center" justifyContent="center" style={{ 'height': '100vh' }}>
         <Grid item xs={11} sm={4} className={classes.mobile}>
           <DetailWrapper/>
@@ -40,7 +40,6 @@ const App = () => {
       </Grid>
       <LoginPopup trigger={buttonPopup}
       setTrigger={setButtonPopup}>
-        <h1>TEST</h1>
       </LoginPopup>
       {/* <PushToTalkButtonContainer>
         <PushToTalkButton />

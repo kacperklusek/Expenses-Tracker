@@ -18,6 +18,8 @@ export default makeStyles(() => ({
     position: 'relative',
     padding: '32px',
     width: '25%',
+    // will it scale 
+    minWidth: '300px',
     maxwidth: '640px',
     backgroundColor: '#FFF',
   },
@@ -26,4 +28,7 @@ export default makeStyles(() => ({
     top: '16px',
     right: '16px',
   },
+  form: {
+    width: '100%',
+  }
 }))
