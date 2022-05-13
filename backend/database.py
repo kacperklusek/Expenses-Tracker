@@ -34,7 +34,7 @@ INITIAL_CATEGORIES = [
 ]
 
 
-# Transactions CRUD
+# Regular Transactions CRUD
 
 async def fetch_one_transaction(user_id, tid):
     pipeline = [
@@ -72,7 +72,7 @@ async def fetch_n_transactions(user_id, have, n):
     cursor = collection.aggregate(pipeline)
 
     async for doc in cursor:
-        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
+        # id trzeba jak niżej zamienić na stringa, bo się sypie
         doc['id'] = str(doc['id'])
         transactions.append(doc)
 
@@ -106,6 +106,105 @@ async def remove_transaction(uid, tid):
     return True
 
 
+
+
+# periodical transactions CRUD
+
+async def fetch_one_periodical_transaction(user_id, tid):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$periodical_transactions'},
+        {'$match': {
+            'periodical_transactions': {'id': ObjectId(tid)}
+        }},
+        {'$replaceWith': '$periodical_transactions'},
+        {'$limit': 1}
+    ]
+    cursor = collection.aggregate(pipeline)
+    async for doc in cursor:
+        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
+        doc['id'] = str(doc['id'])
+        return doc
+    return 1
+
+
+async def fetch_n_periodical_transactions(user_id, have, n):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$periodical_transactions'},
+        {'$replaceWith': '$periodical_transactions'},
+        {"$sort": {"date": -1}},
+        {"$limit": n},
+        {"$skip": have}
+    ]
+
+    transactions = []
+    cursor = collection.aggregate(pipeline)
+
+    async for doc in cursor:
+        # id trzeba jak niżej zamienić na stringa, bo się sypie
+        doc['id'] = str(doc['id'])
+        transactions.append(doc)
+
+    return transactions
+
+
+async def push_periodical_transaction(user_id, p_transaction):
+    p_transaction.category = dict(p_transaction.category)
+    p_transaction.id = ObjectId()
+    pipeline = [
+        {'_id': ObjectId(user_id)},
+        {'$push': {'periodical_transactions': dict(p_transaction)}}
+    ]
+    await collection.update_one(*pipeline)
+
+    return p_transaction
+
+
+async def remove_periodical_transaction(uid, tid):
+    pipeline = [
+        {"_id": ObjectId(uid)},
+        {"$pull": {
+            "periodical_transactions": {
+                "id": ObjectId(tid)
+            }
+        }}
+    ]
+
+    res = await collection.update_one(*pipeline)
+    print(res)
+    return True
+
+
+
+async def create_category(user_id, category):
+    pipeline = [
+        {'_id': ObjectId(user_id)},
+        {'$push': {'categories': dict(category)}}
+    ]
+    category.id = ObjectId()
+
+    await collection.update_one(*pipeline)
+    return category
+
+
+async def remove_category(uid, cid):
+    pipeline = [
+        {"_id": ObjectId(uid)},
+        {"$pull": {
+            "categories": {
+                "id": ObjectId(cid)
+            }
+        }}
+    ]
+
+    res = await collection.update_one(*pipeline)
+    print(res)
+    return True
 
 
 async def add_user(usr):
