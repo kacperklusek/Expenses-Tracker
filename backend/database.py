@@ -43,7 +43,7 @@ async def fetch_one_transaction(user_id, tid):
         }},
         {'$unwind': '$transactions'},
         {'$match': {
-            'transactions.id': ObjectId(tid)
+            'transactions': {'id': ObjectId(tid)}
         }},
         {'$replaceWith': '$transactions'},
         {'$limit': 1}
@@ -95,7 +95,9 @@ async def remove_transaction(uid, tid):
     pipeline = [
         {"_id": ObjectId(uid)},
         {"$pull": {
-            "transactions": {"id": tid}
+            "transactions": {
+                "id": ObjectId(tid)
+            }
         }}
     ]
 
