@@ -12,33 +12,33 @@ database = client.test
 collection = database.Users
 
 INITIAL_CATEGORIES = [
-    {"name": "Business",
-     "type": "Income",
-     "id": '1'},
-    {"name": "Investments",
-     "type": "Income",
-     "id": '2'},
-    {"name": "Gifts",
-     "type": "Income",
-     "id": '3'},
-    {"name": "Lottery",
-     "type": "Income",
-     "id": '4'},
-    {"name": "Car",
-     "type": "Expense",
-     "id": '5'},
-    {"name": "Food",
-     "type": "Expense",
-     "id": '6'},
-    {"name": "Shopping",
-     "type": "Expense",
-     "id": '7'},
-    {"name": "Clothing",
-     "type": "Expense",
-     "id": '8'},
-    {"name": "House",
-     "type": "Expense",
-     "id": '9'}
+    {'_id': ObjectId(),
+    "name": "Business",
+     "type": "Income"},
+    {'_id': ObjectId(),
+    "name": "Investments",
+     "type": "Income"},
+    {'_id': ObjectId(),
+    "name": "Gifts",
+     "type": "Income"},
+    {'_id': ObjectId(),
+    "name": "Lottery",
+     "type": "Income"},
+    {'_id': ObjectId(),
+    "name": "Car",
+     "type": "Expense"},
+    {'_id': ObjectId(),
+    "name": "Food",
+     "type": "Expense"},
+    {'_id': ObjectId(),
+    "name": "Shopping",
+     "type": "Expense"},
+    {'_id': ObjectId(),
+    "name": "Clothing",
+     "type": "Expense"},
+    {'_id': ObjectId(),
+    "name": "House",
+     "type": "Expense"}
 ]
 
 
@@ -85,6 +85,30 @@ async def fetch_n_transactions(user_id, have, n):
         transactions.append(doc)
 
     return transactions
+
+
+# async def fetch_transactions_from_month(user_id, month):
+#     pipeline = [
+#         {"$match": {
+#             '_id': ObjectId(user_id),
+#         }},
+#         {'$unwind': '$transactions'},
+#         {"$match": {
+#             # nie działa ten match kompletnie
+#             # 'transactions': {"transactions.amount": 250.0}
+#         }},
+#         {'$replaceWith': '$transactions'}
+#     ]
+
+#     transactions = []
+#     cursor = collection.aggregate(pipeline)
+
+#     async for doc in cursor:
+#         # id trzeba jak niżej zamienić na stringa, bo się sypie
+#         doc['id'] = str(doc['id'])
+#         transactions.append(doc)
+
+#     return transactions
 
 
 async def push_transaction(user_id, transaction):
@@ -190,11 +214,12 @@ async def remove_periodical_transaction(uid, tid):
 
 
 async def create_category(user_id, category):
+    category.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'categories': dict(category)}}
     ]
-    category.id = ObjectId()
+    
 
     await collection.update_one(*pipeline)
     return category
