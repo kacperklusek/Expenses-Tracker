@@ -12,24 +12,32 @@ database = client.test
 collection = database.Users
 
 INITIAL_CATEGORIES = [
-    {"name": "Business",
+    {'_id': ObjectId(),
+    "name": "Business",
      "type": "Income"},
-    {"name": "Investments",
+    {'_id': ObjectId(),
+    "name": "Investments",
      "type": "Income"},
-    {"name": "Gifts",
+    {'_id': ObjectId(),
+    "name": "Gifts",
      "type": "Income"},
-    {"name": "Lottery",
+    {'_id': ObjectId(),
+    "name": "Lottery",
      "type": "Income"},
-
-    {"name": "Car",
+    {'_id': ObjectId(),
+    "name": "Car",
      "type": "Expense"},
-    {"name": "Food",
+    {'_id': ObjectId(),
+    "name": "Food",
      "type": "Expense"},
-    {"name": "Shopping",
+    {'_id': ObjectId(),
+    "name": "Shopping",
      "type": "Expense"},
-    {"name": "Clothing",
+    {'_id': ObjectId(),
+    "name": "Clothing",
      "type": "Expense"},
-    {"name": "House",
+    {'_id': ObjectId(),
+    "name": "House",
      "type": "Expense"}
 ]
 
@@ -77,6 +85,30 @@ async def fetch_n_transactions(user_id, have, n):
         transactions.append(doc)
 
     return transactions
+
+
+# async def fetch_transactions_from_month(user_id, month):
+#     pipeline = [
+#         {"$match": {
+#             '_id': ObjectId(user_id),
+#         }},
+#         {'$unwind': '$transactions'},
+#         {"$match": {
+#             # nie działa ten match kompletnie
+#             # 'transactions': {"transactions.amount": 250.0}
+#         }},
+#         {'$replaceWith': '$transactions'}
+#     ]
+
+#     transactions = []
+#     cursor = collection.aggregate(pipeline)
+
+#     async for doc in cursor:
+#         # id trzeba jak niżej zamienić na stringa, bo się sypie
+#         doc['id'] = str(doc['id'])
+#         transactions.append(doc)
+
+#     return transactions
 
 
 async def push_transaction(user_id, transaction):
@@ -182,11 +214,12 @@ async def remove_periodical_transaction(uid, tid):
 
 
 async def create_category(user_id, category):
+    category.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'categories': dict(category)}}
     ]
-    category.id = ObjectId()
+    
 
     await collection.update_one(*pipeline)
     return category
@@ -208,6 +241,7 @@ async def remove_category(uid, cid):
 
 
 async def add_user(usr):
+    usr.categories = INITIAL_CATEGORIES
     res = await collection.insert_one(dict(usr))
     print(res.inserted_id)
 

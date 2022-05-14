@@ -10,6 +10,7 @@ from database import (
     remove_transaction,
     fetch_one_periodical_transaction,
     fetch_n_periodical_transactions,
+    # fetch_transactions_from_month,
     push_periodical_transaction,
     remove_periodical_transaction,
     create_category,
@@ -47,6 +48,13 @@ async def get_transaction(uid: str, tid: str):
 async def get_n_transactions(uid: str, have: int, n: int):
     response = await fetch_n_transactions(uid, have, n)
     return response
+
+
+# @app.get("/api/users/{uid}/date")
+# async def get_transactions_from_month(uid: str):
+#     response = await fetch_transactions_from_month(uid, 5)
+#     return response
+
 
 @app.post("/api/users/{uid}")
 async def add_transaction(uid: str, transaction: Transaction):
@@ -94,7 +102,6 @@ async def delete_transaction(uid: str, id: str):
     if response:
         return f"Deleted periodical transaction with id {id} for user with uid:{uid}"
     raise HTTPException(400, f"Error deleting periodical transaction with id:{id} for user with uid:{uid}")
-
 
 
 
