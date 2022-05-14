@@ -30,5 +30,8 @@ export default makeStyles(() => ({
   },
   form: {
     width: '100%',
-  }
+  },
+  button: {
+    marginTop: '20px',
+  },
 }))

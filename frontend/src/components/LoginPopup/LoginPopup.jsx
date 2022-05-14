@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 // import "./cssStyle.css"
 import useStyles from './styles'
+import { TextField, Grid, Button, FormControl, Card, CardContent } from '@material-ui/core'
+
 
 const LoginPopup = (props) => {
-  const [details, setDetails] = useState({email: "", password: ""});
+  const [formData, setFormData] = useState({email: "", password: ""});
 
   const submitHandler = e => {
     e.preventDefault();
@@ -16,26 +18,27 @@ const LoginPopup = (props) => {
   const classes = useStyles()
 
   return (props.trigger) ? (
-    <div className={classes.popup}>
-      <form onSubmit={submitHandler}>
-        <div className={classes.innerPopup}>
-      <p>Work in progres: you can type whatever you want</p>
-              {/* <button className={classes.closeBtn}
-              onClick={() => props.setTrigger(false)}>
-                  Close
-              </button> */}
-              <div className={classes.form}>
-                <label htmlFor='email'>Email:</label>
-                <input type="text" name="email" id="email" />
-              </div>
-              <div className={classes.form}>
-                <label htmlFor='password'>Password:</label>
-                <input type="text" name="password" id="password" />
-              </div>
-              <input type="submit" value="LOGIN"></input>
-          </div>
-      </form>
-    </div>
+    <Card className={classes.popup}>
+      <CardContent className={classes.innerPopup}>
+        <Grid container spacing={2} >
+          <Grid item xs={12}>
+            <FormControl fullWidth color='primary'>
+              <TextField type="email" label="Email" fullWidth value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value})}/>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <TextField type="password" label="Password" fullWidth value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value})}/>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={submitHandler}>Login</Button>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   ) : "";
 }
 
