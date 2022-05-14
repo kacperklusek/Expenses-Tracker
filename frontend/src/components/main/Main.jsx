@@ -8,7 +8,6 @@ import Balance from './Balance/Balance'
 
 const Main = () => {
   const classes = useStyles()
-  const { balance } = useContext(ExpenseTrackerContext)
   const [mode, setMode] = useState(0)
 
   return (

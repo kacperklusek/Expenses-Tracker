@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'
 
 import { TextField, Typography, CardContent, Divider, Button, Grid } from '@material-ui/core'
 import { ExpenseTrackerContext } from '../../../context/context'
-import { v4 as uuidv4 } from "uuid"
+// import { v4 as uuidv4 } from "uuid"
 // import { useSpeechContext } from '@speechly/react-client'
 
 import formatDate from '../../../utils/formatDate'
@@ -16,11 +16,11 @@ const initialState = {
 
 const Balance = () => {
   const classes = useStyles()
-  const { balance, transactions } = useContext(ExpenseTrackerContext)
+  const { user } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState(initialState)
-  const [targetBalance, setTargetBalance] = useState(balance)
+  const [targetBalance, setTargetBalance] = useState(user.balance)
 
-  const periodicalTransactions = transactions.filter((transaction) => transaction.period !== null)
+  const periodicalTransactions = user.transactions.filter((transaction) => transaction.period !== null)
 
   const getBalance = () => {
     if (!formData.date.includes('-')) return
@@ -41,7 +41,7 @@ const Balance = () => {
     var fullYears = yearsDiff - (monthsDiff > 0 || (monthsDiff === 0 && daysDiff >= 0) ? 0 : 1)
     var fullMonths = monthsDiff - (daysDiff >= 0 ? 0 : 1)
 
-    var newBalance = balance
+    var newBalance = user.balance
 
     periodicalTransactions.forEach(tran => {
       var delta = 0
@@ -67,7 +67,7 @@ const Balance = () => {
 
   return (
     <CardContent>
-      <Typography align="center" variant="h5">Total Balance for today ${balance}</Typography>
+      <Typography align="center" variant="h5">Total Balance for today ${user.balance}</Typography>
       <Divider className={classes.divider} />
       <br />
       <Typography align="center" variant="h6">Your balance on {formData.date}: <big>${targetBalance}</big></Typography>

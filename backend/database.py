@@ -13,24 +13,32 @@ collection = database.Users
 
 INITIAL_CATEGORIES = [
     {"name": "Business",
-     "type": "Income"},
+     "type": "Income",
+     "id": '1'},
     {"name": "Investments",
-     "type": "Income"},
+     "type": "Income",
+     "id": '2'},
     {"name": "Gifts",
-     "type": "Income"},
+     "type": "Income",
+     "id": '3'},
     {"name": "Lottery",
-     "type": "Income"},
-
+     "type": "Income",
+     "id": '4'},
     {"name": "Car",
-     "type": "Expense"},
+     "type": "Expense",
+     "id": '5'},
     {"name": "Food",
-     "type": "Expense"},
+     "type": "Expense",
+     "id": '6'},
     {"name": "Shopping",
-     "type": "Expense"},
+     "type": "Expense",
+     "id": '7'},
     {"name": "Clothing",
-     "type": "Expense"},
+     "type": "Expense",
+     "id": '8'},
     {"name": "House",
-     "type": "Expense"}
+     "type": "Expense",
+     "id": '9'}
 ]
 
 
@@ -42,16 +50,16 @@ async def fetch_one_transaction(user_id, tid):
             '_id': ObjectId(user_id),
         }},
         {'$unwind': '$transactions'},
-        {'$match': {
-            'transactions': {'id': ObjectId(tid)}
-        }},
         {'$replaceWith': '$transactions'},
-        {'$limit': 1}
+        {'$match': {
+            'id': ObjectId(tid)
+        }}
     ]
     cursor = collection.aggregate(pipeline)
     async for doc in cursor:
         # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
         doc['id'] = str(doc['id'])
+        print(doc)
         return doc
     return 1
 
@@ -208,10 +216,13 @@ async def remove_category(uid, cid):
 
 
 async def add_user(usr):
+    usr.categories = INITIAL_CATEGORIES
     res = await collection.insert_one(dict(usr))
-    print(res.inserted_id)
-
-    return usr, res.inserted_id
+    response = {
+        "user": usr,
+        "id": str(res.inserted_id)
+    }
+    return response
 
 
 async def get_id(email):

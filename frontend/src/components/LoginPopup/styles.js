@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { Hidden, makeStyles } from "@material-ui/core";
 
 export default makeStyles(() => ({
   popup: {
@@ -12,7 +12,6 @@ export default makeStyles(() => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   innerPopup: {
     position: 'relative',
@@ -22,6 +21,7 @@ export default makeStyles(() => ({
     minWidth: '300px',
     maxwidth: '640px',
     backgroundColor: '#FFF',
+    borderRadius: "10px",
   },
   closeBtn: {
     position: 'absolute',

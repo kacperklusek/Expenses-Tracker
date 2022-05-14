@@ -67,7 +67,7 @@ async def delete_transaction(uid: str, id: str):
 
 # Periodical transactions CRUD
 @app.get("/api/users/{uid}/periodical/{tid}")
-async def get_transaction(uid: str, tid: str):
+async def get_periodical_transaction(uid: str, tid: str):
     response = await fetch_one_periodical_transaction(uid, tid)
     if response:
         return response
@@ -76,12 +76,12 @@ async def get_transaction(uid: str, tid: str):
 
 # fetch n last transactions skippinh {have} transactions because you could have already fetched {have} transactions
 @app.get("/api/users/{uid}/periodical/{have}/{n}")
-async def get_n_transactions(uid: str, have: int, n: int):
+async def get_n_periodical_transactions(uid: str, have: int, n: int):
     response = await fetch_n_periodical_transactions(uid, have, n)
     return response
 
 @app.post("/api/users/{uid}/periodical")
-async def add_transaction(uid: str, transaction: PeriodicalTransaction):
+async def add_periodical_transaction(uid: str, transaction: PeriodicalTransaction):
     response = await push_periodical_transaction(uid, transaction)
     print(response)
     if response:
@@ -89,7 +89,7 @@ async def add_transaction(uid: str, transaction: PeriodicalTransaction):
     raise HTTPException(400, "cannot add periodical transaction")
 
 @app.delete("/api/users/{uid}/periodical/{id}")
-async def delete_transaction(uid: str, id: str):
+async def delete_periodical_transaction(uid: str, id: str):
     response = await remove_periodical_transaction(uid, id)
     if response:
         return f"Deleted periodical transaction with id {id} for user with uid:{uid}"
@@ -110,7 +110,7 @@ async def delete_category(uid: str, cid: str):
     response = await remove_category(uid, cid)
     return response
 
-@app.post("/api/users", response_model=User)
+@app.post("/api/users")
 async def create_user(usr: User):
     response = await add_user(usr)
     return response
@@ -122,13 +122,4 @@ async def login(email: str):
     _id = str(response.get('_id'))
     return _id
 
-
-#
-# @app.delete("/api/transactions/{id}")
-# async def delete_transaction(id):
-#     print(id)
-#     response = await remove_transaction(id)
-#     if response:
-#         return f"Successfully deleted transaction with id {id}"
-#     raise HTTPException(404, f"There is no todo with the id {id}")
 

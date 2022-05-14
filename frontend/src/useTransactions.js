@@ -5,9 +5,9 @@ import { incomeCategories, expenseCategories, resetCategories } from "./constant
 // title can be either income or expense
 const useTransactions = (title) => {
   resetCategories()
-  const { transactions } = useContext(ExpenseTrackerContext)
+  const { user } = useContext(ExpenseTrackerContext)
   // only with given title and non periodical
-  const transactionsPerType = transactions.filter((t) => t.type === title && t.period === null)
+  const transactionsPerType = user.transactions.filter((t) => t.type === title && t.period === null)
   // code below just sums all elements
   const total = transactionsPerType.reduce((acc, currVal) => acc += currVal.amount, 0)
   const categories = title === "Income" ? incomeCategories : expenseCategories
