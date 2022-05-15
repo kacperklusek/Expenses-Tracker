@@ -7,7 +7,7 @@ import axios from "axios";
 
 
 const LoginPopup = (props) => {
-  const { addUser, setUser, user, url } = useContext(ExpenseTrackerContext)
+  const { addUser, setUser, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
   const [loginError, setLoginError] = useState(false)

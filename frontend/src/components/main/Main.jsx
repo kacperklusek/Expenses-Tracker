@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Card, Tabs, Tab } from '@material-ui/core'
 
-import { ExpenseTrackerContext } from '../../context/context'
 import useStyles from "./styles"
 import Forms from './Forms/Forms'
 import Balance from './Balance/Balance'

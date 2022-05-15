@@ -71,7 +71,7 @@ async def fetch_n_transactions(user_id, have, n):
         }},
         {'$unwind': '$transactions'},
         {'$replaceWith': '$transactions'},
-        {"$sort": {"date": -1}},
+        {"$sort": {"date": -1, "id": -1}},
         {"$limit": n},
         {"$skip": have}
     ]

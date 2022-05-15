@@ -36,8 +36,8 @@ export const Provider = ({ children }) => {
       let usr = JSON.parse(localStorage.getItem('user'))
       console.log(usr)
       dispatch({ type: "USER_IN_LOCALSTORAGE", payload: usr })
-      dispatch({ type: "GET_TRANSACTIONS", payload: { have: 0, n: 10}})
-      dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
+      // dispatch({ type: "GET_TRANSACTIONS", payload: { have: 0, n: 10}})
+      // dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
       }
   }, [])
 

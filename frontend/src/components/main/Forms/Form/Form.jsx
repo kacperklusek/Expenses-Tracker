@@ -40,7 +40,7 @@ const Form = () => {
     setOpen(true)
     console.log(transaction)
     addTransaction(transaction)
-    setFormData(initialState)
+    // setFormData(initialState)
   }
 
   useEffect(() => {

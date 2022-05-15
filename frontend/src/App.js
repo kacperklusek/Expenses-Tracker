@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Grid } from '@material-ui/core'
 // import { PushToTalkButton, PushToTalkButtonContainer, ErrorPanel } from '@speechly/react-ui'
 import { SpeechState, useSpeechContext } from '@speechly/react-client'
-import { ExpenseTrackerContext } from './context/context'
 
 import DetailWrapper from './components/DetailWrapper/DetailWrapper'
 import Main from './components/main/Main'
