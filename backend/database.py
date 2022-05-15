@@ -12,32 +12,32 @@ database = client.test
 collection = database.Users
 
 INITIAL_CATEGORIES = [
-    {'_id': ObjectId(),
-    "name": "Business",
+    {'_id': str(ObjectId()),
+     "name": "Business",
      "type": "Income"},
-    {'_id': ObjectId(),
-    "name": "Investments",
+    {'_id': str(ObjectId()),
+     "name": "Investments",
      "type": "Income"},
-    {'_id': ObjectId(),
-    "name": "Gifts",
+    {'_id': str(ObjectId()),
+     "name": "Gifts",
      "type": "Income"},
-    {'_id': ObjectId(),
-    "name": "Lottery",
+    {'_id': str(ObjectId()),
+     "name": "Lottery",
      "type": "Income"},
-    {'_id': ObjectId(),
-    "name": "Car",
+    {'_id': str(ObjectId()),
+     "name": "Car",
      "type": "Expense"},
-    {'_id': ObjectId(),
-    "name": "Food",
+    {'_id': str(ObjectId()),
+     "name": "Food",
      "type": "Expense"},
-    {'_id': ObjectId(),
-    "name": "Shopping",
+    {'_id': str(ObjectId()),
+     "name": "Shopping",
      "type": "Expense"},
-    {'_id': ObjectId(),
-    "name": "Clothing",
+    {'_id': str(ObjectId()),
+     "name": "Clothing",
      "type": "Expense"},
-    {'_id': ObjectId(),
-    "name": "House",
+    {'_id': str(ObjectId()),
+     "name": "House",
      "type": "Expense"}
 ]
 
@@ -139,7 +139,6 @@ async def remove_transaction(uid, tid):
 
 
 
-
 # periodical transactions CRUD
 
 async def fetch_one_periodical_transaction(user_id, tid):
@@ -148,10 +147,10 @@ async def fetch_one_periodical_transaction(user_id, tid):
             '_id': ObjectId(user_id),
         }},
         {'$unwind': '$periodical_transactions'},
-        {'$match': {
-            'periodical_transactions': {'id': ObjectId(tid)}
-        }},
         {'$replaceWith': '$periodical_transactions'},
+        {'$match': {
+            'id': ObjectId(tid)
+        }},
         {'$limit': 1}
     ]
     cursor = collection.aggregate(pipeline)
@@ -250,9 +249,14 @@ async def add_user(usr):
     return response
 
 
-async def get_id(email):
-    res = await collection.find_one({"email": email})
-    return res
+async def get_user(email):
+    usr = await collection.find_one({"email": email})
+    if not usr:
+        return False
+    usr['_id'] = str(usr.get("_id"))
+    first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
+    usr['transactions'] = first_10_tran
+    return usr
 
 
 #

@@ -29,8 +29,7 @@ const LoginPopup = (props) => {
     }
 
     // fetch first 10 transactions for our user
-    getTransactions({have: 0, n:10})
-
+    // getTransactions({have: 0, n:10})
 
     props.setTrigger(false);
   }

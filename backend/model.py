@@ -30,20 +30,20 @@ class MongoModel(BaseModel):
 
 
 class Category(MongoModel):
-    id: OID | None
+    id: OID | None | str
     type: str
     name: str
 
 
 class Transaction(MongoModel):
-    id: OID | None
+    id: OID | None | str
     category: Category
     date: datetime
     amount: float
 
 
 class PeriodicalTransaction(MongoModel):
-    id: OID | None
+    id: OID | None | str
     category: Category
     date: str
     finalDate: str
@@ -60,4 +60,5 @@ class User(MongoModel):
     transactions: List[Transaction]
     periodical_transactions: List[PeriodicalTransaction]
     balance: float
+
 

@@ -16,7 +16,7 @@ from database import (
     create_category,
     remove_category,
     add_user,
-    get_id,
+    get_user,
 )
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -123,10 +123,10 @@ async def create_user(usr: User):
     return response
 
 # returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
-@app.get("/api/users/{email}", response_model=str)
+@app.get("/api/users/{email}")
 async def login(email: str):
-    response = await get_id(email)
-    _id = str(response.get('_id'))
-    return _id
-
+    usr = await get_user(email)
+    if usr:
+        return usr
+    raise HTTPException(400, "Error fetching user, probably no user with given email")
 

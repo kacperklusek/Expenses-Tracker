@@ -6,8 +6,17 @@ import axios from "axios";
 const url = "http://localhost:8000"
 
 const contextReducer = (state, action) => {
+
+  const saveId = (id) => {
+    if (!localStorage.getItem("uid")){ 
+      localStorage.setItem("uid", id)
+    }
+  }
+
   let transactions
   let user
+
+
   switch (action.type) {
     case "FETCH_SUCCESS":
       return action.payload
@@ -62,6 +71,8 @@ const contextReducer = (state, action) => {
           user = res.data.user
           let id = res.data.id
           user.id = id
+          saveId(id)
+          return user
         })
         .catch(err => {
           console.log("error" + err)
@@ -73,14 +84,17 @@ const contextReducer = (state, action) => {
       // TODO now login is based only on email, change that
       axios.get(url + "/api/users/" + action.payload.email)
         .then(res => {
-          user = {...state, id: res.data}
+          user = {...res.data}
+          user.id = res.data._id
           console.log(user)
+          saveId(user.id)
           return user
         })
         .catch(err => {
           console.log("Error!" + err)
           return state
         })
+      return user
     default:
       return state
   }
