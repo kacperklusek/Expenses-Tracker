@@ -24,7 +24,6 @@ const Balance = () => {
 
   const getBalance = () => {
     if (!formData.date.includes('-')) return
-
     const target = new Date(formData.date)
     const today = new Date()
     if (target < today) {
@@ -73,19 +72,9 @@ const Balance = () => {
       <Typography align="center" variant="h6">Your balance on {formData.date}: <big>${targetBalance}</big></Typography>
       <br />
       <Grid container spacing={2}>
-        {/* <Grid item xs={12}>  // speechly shit
-          <Typography align="center" variant='subtitle2' gutterBottom>
-            {segment && segment.words.map((word) => word.value).join(' ')}
-          </Typography>
-        </Grid> */}
-        {/* <Grid item xs={6}>
-          <TextField type="number" label="Amount" fullWidth value={formData.amount}
-            onChange={(e) => setFormData({...formData, amount: e.target.value})} />
-        </Grid> */}
-        {/* <Grid item xs={6}> */}
         <Grid item xs={12}>
           <TextField fullWidth label="Target Date" type="date" value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: formatDate(e.target.value) })} />
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
         </Grid>
         <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={() => setTargetBalance(getBalance())}>Calculate</Button>
       </Grid>

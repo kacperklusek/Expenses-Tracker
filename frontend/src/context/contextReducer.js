@@ -34,6 +34,7 @@ const contextReducer = (state, action) => {
     case "ADD_TRANSACTION":
       user = {...state}
       user.transactions = [action.payload, ...state.transactions]
+      user.transactions = [...new Set(user.transactions)]
       console.log("adding " + action.payload);
       axios.post(url + `/api/users/${user.id}`, action.payload)
         .then(res => {
@@ -100,6 +101,7 @@ const contextReducer = (state, action) => {
     case "ADD_PERIODICAL_TRANSACTION": 
       user = {...state}
       user.periodical_transactions = [action.payload, ...state.periodical_transactions]
+      user.periodical_transactions = [...new Set(user.periodical_transactions)]
       console.log("adding " + action.payload);
       axios.post(url + `/api/users/${user.id}/periodical`, action.payload)
         .then(res => {

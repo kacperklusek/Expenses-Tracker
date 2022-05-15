@@ -52,7 +52,7 @@ async def fetch_one_transaction(user_id, tid):
         {'$unwind': '$transactions'},
         {'$replaceWith': '$transactions'},
         {'$match': {
-            'id': ObjectId(tid)
+            'id': tid
         }}
     ]
     cursor = collection.aggregate(pipeline)
@@ -127,7 +127,7 @@ async def remove_transaction(uid, tid):
         {"_id": ObjectId(uid)},
         {"$pull": {
             "transactions": {
-                "id": ObjectId(tid)
+                "id": tid
             }
         }}
     ]
@@ -148,7 +148,7 @@ async def fetch_one_periodical_transaction(user_id, tid):
         {'$unwind': '$periodical_transactions'},
         {'$replaceWith': '$periodical_transactions'},
         {'$match': {
-            'id': ObjectId(tid)
+            'id': tid
         }},
         {'$limit': 1}
     ]
@@ -199,7 +199,7 @@ async def remove_periodical_transaction(uid, tid):
         {"_id": ObjectId(uid)},
         {"$pull": {
             "periodical_transactions": {
-                "id": ObjectId(tid)
+                "id": tid
             }
         }}
     ]
@@ -227,7 +227,7 @@ async def remove_category(uid, cid):
         {"_id": ObjectId(uid)},
         {"$pull": {
             "categories": {
-                "id": ObjectId(cid)
+                "id": cid
             }
         }}
     ]
