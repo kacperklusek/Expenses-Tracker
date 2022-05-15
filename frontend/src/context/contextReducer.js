@@ -1,26 +1,22 @@
 import axios from "axios";
-
+import { saveUser } from "./context";
 
 // state is our transactions list
 
-const url = "http://localhost:8000"
+export const url = "http://localhost:8000"
+
 
 const contextReducer = (state, action) => {
-
-  const saveId = (id) => {
-    if (!localStorage.getItem("uid")){ 
-      localStorage.setItem("uid", id)
-    }
-  }
 
   let transactions
   let user
 
 
   switch (action.type) {
-    case "FETCH_SUCCESS":
-      return action.payload
-
+    case "USER_IN_LOCALSTORAGE":
+      user = action.payload
+      console.log("setting user: " + user)
+      return user
     case "DELETE_TRANSACTION":
       console.log("deleting..."+action.payload);
       transactions = state.filter((t) => t.id !== action.payload);
@@ -71,7 +67,7 @@ const contextReducer = (state, action) => {
           user = res.data.user
           let id = res.data.id
           user.id = id
-          saveId(id)
+          saveUser(user)
           return user
         })
         .catch(err => {
@@ -87,14 +83,16 @@ const contextReducer = (state, action) => {
           user = {...res.data}
           user.id = res.data._id
           console.log(user)
-          saveId(user.id)
+          saveUser(user)
           return user
         })
         .catch(err => {
-          console.log("Error!" + err)
+          console.log(err)
           return state
         })
       return user
+    case "SET_USER":
+      return action.payload
     default:
       return state
   }

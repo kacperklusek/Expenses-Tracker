@@ -12,15 +12,12 @@ import LoginPopup from "./components/LoginPopup/LoginPopup"
 const App = () => {
   const classes = useStyles()
   const { speechState } = useSpeechContext()
-  const { user, getTransactions } = useContext(ExpenseTrackerContext)
   const main = useRef(null)
   const [buttonPopup, setButtonPopup] = useState(true);
 
-  if (localStorage.getItem("uid") && !user.id) {
-    setButtonPopup(false)
-    user.id = localStorage.getItem("uid")
-    getTransactions({"have": 0, "n": 10})
-  }
+  // if (!localStorage.getItem("user")) {
+  //   setButtonPopup(true)
+  // }
 
   const executeScroll = () => main.current.scrollIntoView();
 
@@ -46,7 +43,12 @@ const App = () => {
           <DetailWrapper/>
         </Grid>
       </Grid>
-      <LoginPopup trigger={buttonPopup} setTrigger={setButtonPopup}/>
+      {
+        localStorage.getItem("user") ? 
+        "" 
+        :
+        <LoginPopup trigger={buttonPopup} setTrigger={setButtonPopup}/>
+      }
       {/* <PushToTalkButtonContainer>
         <PushToTalkButton />
         <ErrorPanel />

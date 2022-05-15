@@ -1,15 +1,18 @@
 import React, { useState, useContext } from 'react'
-// import "./cssStyle.css"
 import useStyles from './styles'
 import { TextField, Grid, Button, FormControl, Card, CardContent, Switch, FormLabel } from '@material-ui/core'
-import { ExpenseTrackerContext } from '../../context/context'
+import { Alert } from '@material-ui/lab'
+import { ExpenseTrackerContext, saveUser } from '../../context/context'
+import axios from "axios";
+
 
 const LoginPopup = (props) => {
-  const { addUser, getUser, getTransactions } = useContext(ExpenseTrackerContext)
+  const { addUser, setUser, user, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
+  const [loginError, setLoginError] = useState(false)
 
-  const submitHandler = e => {
+  const submitHandler = async e => {
     if (register) {
       let usr = {
         name: formData.name,
@@ -20,18 +23,21 @@ const LoginPopup = (props) => {
         periodical_transactions: [],
         balance: 0.0
       }
-      addUser(usr)
-    } else { // login for now only based on email
-      getUser({
-        email: formData.email,
-        password: formData.password
+      await addUser(usr)
+    } else {
+      axios.get(url + "/api/users/" + formData.email)
+      .then(res => {
+        res.data.id = res.data._id
+        setUser(res.data)
+        saveUser(res.data)
+        props.setTrigger(false);
+        setLoginError(false)
+      })
+      .catch(err => {
+        console.log(err)
+        setLoginError(true)
       })
     }
-
-    // fetch first 10 transactions for our user
-    // getTransactions({have: 0, n:10})
-
-    props.setTrigger(false);
   }
 
   const classes = useStyles()
@@ -58,6 +64,12 @@ const LoginPopup = (props) => {
               </FormControl>
             </Grid>
              : ""
+          }
+          {
+            loginError ?
+            <Alert severity="error">Wrong username or password</Alert>
+            :
+            ""
           }
           <Grid item xs={12}>
             <FormControl fullWidth color='primary'>
