@@ -113,7 +113,6 @@ async def fetch_n_transactions(user_id, have, n):
 
 async def push_transaction(user_id, transaction):
     transaction.category = dict(transaction.category)
-    transaction.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'transactions': dict(transaction)}}
@@ -186,7 +185,6 @@ async def fetch_n_periodical_transactions(user_id, have, n):
 
 async def push_periodical_transaction(user_id, p_transaction):
     p_transaction.category = dict(p_transaction.category)
-    p_transaction.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'periodical_transactions': dict(p_transaction)}}

@@ -8,11 +8,10 @@ import { CustomizedSnackbar } from '../../../Snackbar/Snackbar'
 import formatDate from '../../../../utils/formatDate'
 import useStyles from "./styles"
 import { incomeCategories, expenseCategories } from '../../../../constants/categories'
-import List from '../../List/List'
 
 const initialState = {
   amount: '',
-  category: '',
+  categoryName: '',
   type: 'Income',
   date: formatDate(new Date()),
 }
@@ -26,15 +25,20 @@ const Form = () => {
 
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || formData.category === '' || !formData.date.includes('-')) return
+    const category = {
+      type: formData.type,
+      name: formData.categoryName
+    }
 
     const transaction = {
-      ...formData,
-      amount: Number(formData.amount),
+      category: category,
+      date: new Date(formData.date).toISOString(),
+      amount: parseFloat(formData.amount),
       id: uuidv4()
     }
     
     setOpen(true)
-    transaction.period = null;    
+    console.log(transaction)
     addTransaction(transaction)
     setFormData(initialState)
   }
@@ -106,8 +110,8 @@ const Form = () => {
         <FormControl fullWidth>
           <InputLabel>Category</InputLabel>
           <Select
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            value={formData.categoryName}
+            onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
             {selectedCategories.map((c) =>
               <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)
@@ -121,7 +125,7 @@ const Form = () => {
       </Grid>
       <Grid item xs={6}>
         <TextField fullWidth label="date" type="date" value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: formatDate(e.target.value) })} />
+          onChange={(e) => {setFormData({ ...formData, date: e.target.value })}} />
       </Grid>
       <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={createTransaction}>Create</Button>
     </Grid>

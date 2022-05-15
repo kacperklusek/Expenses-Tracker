@@ -4,9 +4,13 @@ import contextReducer from './contextReducer'
 import axios from 'axios'
 
 export const saveUser = (user) => {
-  if (!localStorage.getItem("user")){
-    user = JSON.stringify(user)
-    localStorage.setItem("user", user)
+  user = JSON.stringify(user)
+  localStorage.setItem("user", user)
+}
+
+export const clearUser = (user) => {
+  if (localStorage.getItem("user")){
+    localStorage.removeItem('user')
   }
 }
 
@@ -27,21 +31,23 @@ export const ExpenseTrackerContext = createContext(initialState)
 export const Provider = ({ children }) => {
   const [user, dispatch] = useReducer(contextReducer, initialState)
 
-  // fetch first 1
   useEffect(() => {
-    console.log("dupa")
     if (localStorage.getItem("user")) {
       let usr = JSON.parse(localStorage.getItem('user'))
       console.log(usr)
       dispatch({ type: "USER_IN_LOCALSTORAGE", payload: usr })
-      console.log(user)
-    }
+      dispatch({ type: "GET_TRANSACTIONS", payload: { have: 0, n: 10}})
+      dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
+      }
   }, [])
 
   // Action Creators
   const deleteTransaction = (id) => dispatch({ type: "DELETE_TRANSACTION", payload: id })
+  const deletePeriodicalTransaction = (id) => dispatch({ type: "DELETE_PERIODICAL_TRANSACTION", payload: id })
   const addTransaction = (transaction) => dispatch({ type: "ADD_TRANSACTION", payload: transaction })
+  const addPeriodicalTransaction = (transaction) => dispatch({ type: "ADD_PERIODICAL_TRANSACTION", payload: transaction })
   const getTransactions = (fetchData) => dispatch({type: "GET_TRANSACTIONS", payload: fetchData})
+  const getPeriodicalTransactions = (fetchData) => dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
   const addUser = (userData) => dispatch({type: "ADD_USER", payload: userData})
   const getUser = (loginData) => dispatch({type: "LOGIN", payload: loginData})
   const setUser = (newUser) => dispatch({type: "SET_USER", payload:newUser})
@@ -53,6 +59,9 @@ export const Provider = ({ children }) => {
       deleteTransaction,
       addTransaction,
       getTransactions,
+      getPeriodicalTransactions,
+      addPeriodicalTransaction,
+      deletePeriodicalTransaction,
       addUser,
       getUser,
       setUser,

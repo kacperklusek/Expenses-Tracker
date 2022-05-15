@@ -45,11 +45,11 @@ class Transaction(MongoModel):
 class PeriodicalTransaction(MongoModel):
     id: OID | None | str
     category: Category
-    date: str
-    finalDate: str
+    date: datetime
+    finalDate: datetime | None
     amount: float
     period: int
-    periodType: str
+    periodType: str     # Day / Month / Year
 
 
 class User(MongoModel):

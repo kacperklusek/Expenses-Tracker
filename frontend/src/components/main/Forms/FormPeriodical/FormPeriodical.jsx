@@ -12,7 +12,7 @@ import { expenseCategories, incomeCategories } from '../../../../constants/categ
 
 const initialState = {
   amount: '',
-  category: '',
+  categoryName: '',
   type: "Income",
   date: formatDate(new Date()), // start date
   finalDate: formatDate(new Date()),
@@ -24,43 +24,32 @@ const FormPeriodical = () => {
   const classes = useStyles()
   const [formData, setFormData] = useState(initialState)
   const [finalDate, setFinalDate] = useState(false)
-  const { addTransaction } = useContext(ExpenseTrackerContext)
+  const { addPeriodicalTransaction } = useContext(ExpenseTrackerContext)
   // const {segment} = useSpeechContext() TODO add voice controlled periodical payments
   const [open, setOpen] = useState(false)
 
   const createTransaction = () => {
-    if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.category === '' || formData.periodType === '' || !formData.date.includes('-')) return
+    if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.categoryName === '' || formData.periodType === '' || !formData.date.includes('-')) return
 
+    const category = {
+      type: formData.type,
+      name: formData.categoryName
+    }    
     var transaction = {
-      ...formData,
-      amount: Number(formData.amount),
-      period: Number(formData.period),
+      category: category,
+      date: new Date(formData.date).toISOString(),
+      finalDate: new Date(formData.finalDate).toISOString(),
+      amount: parseFloat(formData.amount),
+      period: parseFloat(formData.period),
+      periodType: formData.periodType,
       id: uuidv4()
     }
 
     transaction.finalDate = finalDate ? transaction.finalDate : null
 
     setOpen(true)
-    // add periodical
-    addTransaction(transaction)
+    addPeriodicalTransaction(transaction)
 
-    // transaction.period = null;
-    // transaction.periodType = null;
-    // transaction.finalDate = null;
-    // transaction.periodical = true;
-    // addTransaction(transaction)
-
-    setFormData(initialState)
-
-    // add first payment
-    transaction = {
-      ...formData,
-      amount: Number(formData.amount),
-      id: uuidv4()
-    }
-    setOpen(true)
-    transaction.period = null;    
-    addTransaction(transaction)
     setFormData(initialState)
   }
 
@@ -90,8 +79,8 @@ const FormPeriodical = () => {
         <FormControl fullWidth>
           <InputLabel>Category</InputLabel>
           <Select fullWidth
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            value={formData.categoryName}
+            onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
             {selectedCategories.map((c) =>
               <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)
@@ -105,11 +94,11 @@ const FormPeriodical = () => {
       </Grid>
       <Grid item xs={5}>
         <TextField label="start date" type="date" value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: formatDate(e.target.value) })} />
+          onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
       </Grid>
       <Grid item xs={5}>
         <TextField label="final date*" type="date" value={formData.finalDate} disabled={!finalDate}
-          onChange={(e) => setFormData({ ...formData, finalDate: formatDate(e.target.value) })} />
+          onChange={(e) => setFormData({ ...formData, finalDate: e.target.value })} />
       </Grid>
       <Grid item xs={2}>
         <Checkbox label="set final date" color="default"
