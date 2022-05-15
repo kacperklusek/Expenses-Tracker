@@ -255,7 +255,9 @@ async def get_user(email):
         return False
     usr['_id'] = str(usr.get("_id"))
     first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
+    first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
     usr['transactions'] = first_10_tran
+    usr['periodical_transactions'] = first_10_tran_periodical
     return usr
 
 

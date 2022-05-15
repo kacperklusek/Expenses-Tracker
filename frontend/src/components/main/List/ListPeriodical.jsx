@@ -7,11 +7,11 @@ import useStyles from "./styles"
 
 const List = () => {
   const classes = useStyles()
-  const { deleteTransaction, transactions } = useContext(ExpenseTrackerContext)
+  const { deleteTransaction, user } = useContext(ExpenseTrackerContext)
 
   return (
     <MUIList dense={false} className={classes.list}>
-      {transactions.filter(t => t.period !== null).map((transaction) => (
+      {user.transactions.filter(t => t.period !== null).map((transaction) => (
         <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
           <ListItem>
             <ListItemAvatar>
