@@ -209,7 +209,6 @@ async def remove_periodical_transaction(uid, tid):
     return True
 
 
-
 async def create_category(user_id, category):
     category.id = ObjectId()
     pipeline = [

@@ -96,12 +96,12 @@ async def add_periodical_transaction(uid: str, transaction: PeriodicalTransactio
         return transaction
     raise HTTPException(400, "cannot add periodical transaction")
 
-@app.delete("/api/users/{uid}/periodical/{id}")
-async def delete_periodical_transaction(uid: str, id: str):
-    response = await remove_periodical_transaction(uid, id)
+@app.delete("/api/users/{uid}/periodical/{ptid}")
+async def delete_periodical_transaction(uid: str, ptid: str):
+    response = await remove_periodical_transaction(uid, ptid)
     if response:
-        return f"Deleted periodical transaction with id {id} for user with uid:{uid}"
-    raise HTTPException(400, f"Error deleting periodical transaction with id:{id} for user with uid:{uid}")
+        return f"Deleted periodical transaction with id {ptid} for user with uid:{uid}"
+    raise HTTPException(400, f"Error deleting periodical transaction with id:{ptid} for user with uid:{uid}")
 
 
 

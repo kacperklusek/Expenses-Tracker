@@ -8,7 +8,7 @@ import axios from 'axios'
 
 const List = () => {
   const classes = useStyles()
-  const { deleteTransaction, user, setUser, url } = useContext(ExpenseTrackerContext)
+  const { deletePeriodicalTransaction, user, setUser, url } = useContext(ExpenseTrackerContext)
   const [hasMore, setHasMore] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
 
@@ -49,7 +49,7 @@ const List = () => {
                 `since ${new Date(transaction.date).toLocaleDateString()} - every ${transaction.period > 1 ? transaction.period : ''} ${transaction.periodType}${transaction.period > 1 ? 's' : ''}`
               } />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label='delete' onClick={() => deleteTransaction(transaction.id)}>
+              <IconButton edge="end" aria-label='delete' onClick={() => deletePeriodicalTransaction(transaction.id)}>
                 <Delete />
               </IconButton>
             </ListItemSecondaryAction>
