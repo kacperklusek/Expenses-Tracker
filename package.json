@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-infinite-scroll-hook": "^4.0.3"
+  }
+}
