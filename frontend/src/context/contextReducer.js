@@ -1,5 +1,5 @@
 import axios from "axios";
-import { saveUser, clearUser } from "./context";
+import { saveUser} from "./context";
 
 // state is our transactions list
 
@@ -20,7 +20,7 @@ const contextReducer = (state, action) => {
       user = {...state}
       user.transactions = user.transactions.filter((t) => t.id !== action.payload);
 
-      axios.delete(url + `/api/users/${user.id}/${action.payload}`)
+      axios.delete(url + `/api/users/${user.id}/transactions/${action.payload}`)
         .then(res => {
           console.log("succesfully deleted transaction");
         })
@@ -36,7 +36,7 @@ const contextReducer = (state, action) => {
       user.transactions = [action.payload, ...state.transactions]
       user.transactions = [...new Set(user.transactions)]
       console.log("adding " + action.payload);
-      axios.post(url + `/api/users/${user.id}`, action.payload)
+      axios.post(url + `/api/users/${user.id}/transactions`, action.payload)
         .then(res => {
           console.log("succesfully added transaction");
         })
@@ -51,7 +51,7 @@ const contextReducer = (state, action) => {
       user = {...state}
       let have = action.payload.have
       let n = action.payload.n
-      axios.get(url + `/api/users/${user.id}/${have}/${n}`)
+      axios.get(url + `/api/users/${user.id}/transactions/${have}/${n}`)
         .then( res => {
           let newTransactions = [...state.transactions, ...res.data]
           newTransactions = [ ...new Set(newTransactions)]
@@ -114,6 +114,53 @@ const contextReducer = (state, action) => {
         })
       saveUser(user)
       return user
+
+    case "GET_CATEGORIES":
+      user = {...state}
+      axios.get(url + `/api/users/${user.id}/categories`)
+        .then( res => {
+          user = {...state, transactions: res.data}
+          saveUser(user)
+          return user
+        })
+        .catch(err => {
+          console.log(err)
+          return user
+        })
+      return user
+    case "ADD_CATEGORY":
+      user = {...state}
+      user.categories = [action.payload, ...state.categories]
+      user.categories = [...new Set(user.categories)]
+      console.log("adding " + action.payload);
+      axios.post(url + `/api/users/${user.id}/categories`, action.payload)
+        .then(res => {
+          console.log("succesfully added category");
+        })
+        .catch(err => {
+          console.log("error adding category");
+          saveUser(state)
+          return state
+        })
+      saveUser(user)
+      return user
+    case "DELETE_CATEGORY":
+      console.log("deleting..."+action.payload);
+      user = {...state}
+      user.categories = user.categories.filter((c) => c.id !== action.payload);
+
+      axios.delete(url + `/api/users/${user.id}/categories/${action.payload}`)
+        .then(res => {
+          console.log("succesfully deleted category");
+        })
+        .catch(err => {
+          console.log("error deleting category");
+          saveUser(state)
+          return state
+        })
+        saveUser(user)
+        return user
+
     case "ADD_USER":
       user = {...state}
       axios.post(url + "/api/users", action.payload)

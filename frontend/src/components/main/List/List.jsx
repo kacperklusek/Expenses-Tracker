@@ -21,7 +21,7 @@ const List = () => {
   const loadMore = () => {
     setIsFetching(true)
     const more = 5
-    axios.get(url + `/api/users/${user.id}/${user.transactions.length}/${user.transactions.length + more}`)
+    axios.get(url + `/api/users/${user.id}/transactions/${user.transactions.length}/${user.transactions.length + more}`)
       .then(res => {
         const usr = {...user}
         usr.transactions = [...usr.transactions, ...res.data]

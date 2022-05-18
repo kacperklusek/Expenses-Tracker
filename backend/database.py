@@ -190,7 +190,6 @@ async def push_periodical_transaction(user_id, p_transaction):
         {'$push': {'periodical_transactions': dict(p_transaction)}}
     ]
     await collection.update_one(*pipeline)
-
     return p_transaction
 
 
@@ -209,13 +208,31 @@ async def remove_periodical_transaction(uid, tid):
     return True
 
 
+# categories CRUD
+async def fetch_categories(user_id):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$categories'},
+        {'$replaceWith': '$categories'}
+    ]
+
+    categories = []
+    cursor = collection.aggregate(pipeline)
+
+    async for doc in cursor:
+        categories.append(doc)
+
+    return categories
+
+
 async def create_category(user_id, category):
     category.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'categories': dict(category)}}
     ]
-    
 
     await collection.update_one(*pipeline)
     return category
@@ -257,16 +274,5 @@ async def get_user(email):
     usr['periodical_transactions'] = first_10_tran_periodical
     return usr
 
-
-#
-# async def fetch_all_transactions():
-#     transactions = []
-#     cursor = collection.find({})
-#     async for document in cursor:
-#         transactions.append(Transaction(**document))
-#     return transactions
-
-
-#
 
 

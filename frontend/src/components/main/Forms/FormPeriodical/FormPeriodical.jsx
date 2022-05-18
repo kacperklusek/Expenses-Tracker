@@ -8,7 +8,6 @@ import { ExpenseTrackerContext } from '../../../../context/context'
 import formatDate from '../../../../utils/formatDate'
 
 import useStyles from "./styles"
-import { expenseCategories, incomeCategories } from '../../../../constants/categories'
 
 const initialState = {
   amount: '',
@@ -24,7 +23,7 @@ const FormPeriodical = () => {
   const classes = useStyles()
   const [formData, setFormData] = useState(initialState)
   const [finalDate, setFinalDate] = useState(false)
-  const { addPeriodicalTransaction } = useContext(ExpenseTrackerContext)
+  const { addPeriodicalTransaction, user } = useContext(ExpenseTrackerContext)
   // const {segment} = useSpeechContext() TODO add voice controlled periodical payments
   const [open, setOpen] = useState(false)
 
@@ -53,8 +52,6 @@ const FormPeriodical = () => {
     setFormData(initialState)
   }
 
-  const selectedCategories = formData.type === "Income" ? incomeCategories : expenseCategories
-
   return (
     <Grid container spacing={2}>
       <CustomizedSnackbar open={open} setOpen={setOpen} />
@@ -82,8 +79,8 @@ const FormPeriodical = () => {
             value={formData.categoryName}
             onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
-            {selectedCategories.map((c) =>
-              <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)
+            {user.categories.filter(c => c.type === formData.type).map((c) =>
+              <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
             }
           </Select>
         </FormControl>

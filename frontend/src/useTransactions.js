@@ -1,19 +1,18 @@
 import { useContext } from "react";
 import { ExpenseTrackerContext } from "./context/context";
-import { incomeCategories, expenseCategories, resetCategories } from "./constants/categories";
 
 // title can be either income or expense
 const useTransactions = (title) => {
-  resetCategories()
   const { user } = useContext(ExpenseTrackerContext)
-  // only with given title and non periodical
+  // only with given title
   const transactionsPerType = user.transactions.filter((t) => t.category.type === title)
   // code below just sums all elements
   const total = transactionsPerType.reduce((acc, currVal) => acc += currVal.amount, 0)
-  const categories = title === "Income" ? incomeCategories : expenseCategories
+  const categories = user.categories.filter(c => c.type === title)
 
+  categories.forEach(c => c.amount = 0)
   transactionsPerType.forEach((t) => {
-    const category = categories.find((c) => c.type === t.category.name)
+    const category = categories.find((c) => c.name === t.category.name)
 
     if (category) category.amount += t.amount
   });
@@ -21,10 +20,15 @@ const useTransactions = (title) => {
   const filteredCategories = categories.filter((c) => c.amount > 0)
 
   const chartData = {
-    labels: filteredCategories.map((c) => c.type),
+    labels: filteredCategories.map((c) => c.name),
     datasets: [{
       data: filteredCategories.map((c) => c.amount),
-      backgroundColor: filteredCategories.map((c) => c.color),
+      backgroundColor: filteredCategories.map( c =>
+        title === "Income" ?
+        `rgb(${Math.floor(Math.random(c._id) * 160 + 90)}, 220, ${Math.floor(Math.random(c._id) * 160 + 90)})`
+        :
+        `rgb(166, ${Math.floor(Math.random(c._id) * 150 + 20)}, ${Math.floor(Math.random(c._id) * 150 + 20)})`
+        ),
       hoverOffset: 4,
     }]
   }

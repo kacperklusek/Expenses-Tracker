@@ -15,6 +15,7 @@ from database import (
     remove_periodical_transaction,
     create_category,
     remove_category,
+    fetch_categories,
     add_user,
     get_user,
 )
@@ -36,15 +37,15 @@ app.add_middleware(
 )
 
 
-@app.get("/api/users/{uid}/{tid}")
+@app.get("/api/users/{uid}/transactions/{tid}")
 async def get_transaction(uid: str, tid: str):
     response = await fetch_one_transaction(uid, tid)
     if response:
         return response
     raise HTTPException(400, f"cannot fetch transaction with id:{tid} for user_id:{uid}")
 
-# fetch n last transactions skippinh {have} transactions because you could have already fetched {have} transactions
-@app.get("/api/users/{uid}/{have}/{n}")
+# fetch n last transactions skipping {have} transactions because you could have already fetched {have} transactions
+@app.get("/api/users/{uid}/transactions/{have}/{n}")
 async def get_n_transactions(uid: str, have: int, n: int):
     response = await fetch_n_transactions(uid, have, n)
     return response
@@ -56,7 +57,7 @@ async def get_n_transactions(uid: str, have: int, n: int):
 #     return response
 
 
-@app.post("/api/users/{uid}")
+@app.post("/api/users/{uid}/transactions")
 async def add_transaction(uid: str, transaction: Transaction):
     response = await push_transaction(uid, transaction)
     print(response)
@@ -64,7 +65,7 @@ async def add_transaction(uid: str, transaction: Transaction):
         return transaction
     raise HTTPException(400, "cannot add transaction")
 
-@app.delete("/api/users/{uid}/{id}")
+@app.delete("/api/users/{uid}/transactions/{id}")
 async def delete_transaction(uid: str, id: str):
     response = await remove_transaction(uid, id)
     if response:
@@ -107,15 +108,21 @@ async def delete_periodical_transaction(uid: str, ptid: str):
 
 
 
-@app.post("/api/users/categories/{uid}")
+@app.post("/api/users/{uid}/categories")
 async def add_category(uid: str, category: Category):
     response = await create_category(uid, category)
     return response
 
-@app.delete("/api/users/categories/{uid}/{cid}")
+@app.delete("/api/users/{uid}/categories/{cid}")
 async def delete_category(uid: str, cid: str):
     response = await remove_category(uid, cid)
     return response
+
+@app.get("/api/users/{uid}/categories")
+async def get_categories(uid: str):
+    response = await fetch_categories(uid)
+    return response
+
 
 @app.post("/api/users")
 async def create_user(usr: User):

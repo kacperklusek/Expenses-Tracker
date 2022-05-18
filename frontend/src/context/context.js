@@ -1,7 +1,6 @@
 import React, { useReducer, createContext, useEffect } from "react";
 
 import contextReducer from './contextReducer'
-import axios from 'axios'
 
 export const saveUser = (user) => {
   user = JSON.stringify(user)
@@ -48,6 +47,9 @@ export const Provider = ({ children }) => {
   const addPeriodicalTransaction = (transaction) => dispatch({ type: "ADD_PERIODICAL_TRANSACTION", payload: transaction })
   const getTransactions = (fetchData) => dispatch({type: "GET_TRANSACTIONS", payload: fetchData})
   const getPeriodicalTransactions = (fetchData) => dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
+  const getCategories = () => dispatch({type: "GET_CATEGORIES"})
+  const addCategory = (category) => dispatch({type: "ADD_CATEGORY", payload: category})
+  const deleteCategory = (id) => dispatch({type: "DELETE_CATEGORY", payload: id})
   const addUser = (userData) => dispatch({type: "ADD_USER", payload: userData})
   const getUser = (loginData) => dispatch({type: "LOGIN", payload: loginData})
   const setUser = (newUser) => dispatch({type: "SET_USER", payload:newUser})
@@ -62,6 +64,9 @@ export const Provider = ({ children }) => {
       getPeriodicalTransactions,
       addPeriodicalTransaction,
       deletePeriodicalTransaction,
+      addCategory,
+      deleteCategory,
+      getCategories,
       addUser,
       getUser,
       setUser,

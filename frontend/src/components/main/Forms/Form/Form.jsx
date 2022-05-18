@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { TextField, Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
 import { ExpenseTrackerContext } from '../../../../context/context'
 import { v4 as uuidv4 } from "uuid"
@@ -7,7 +7,6 @@ import { CustomizedSnackbar } from '../../../Snackbar/Snackbar'
 
 import formatDate from '../../../../utils/formatDate'
 import useStyles from "./styles"
-import { incomeCategories, expenseCategories } from '../../../../constants/categories'
 
 const initialState = {
   amount: '',
@@ -19,7 +18,7 @@ const initialState = {
 const Form = () => {
   const classes = useStyles()
   const [formData, setFormData] = useState(initialState)
-  const { addTransaction } = useContext(ExpenseTrackerContext)
+  const { addTransaction, user } = useContext(ExpenseTrackerContext)
   const { segment } = useSpeechContext()
   const [open, setOpen] = useState(false)
 
@@ -40,51 +39,51 @@ const Form = () => {
     setOpen(true)
     console.log(transaction)
     addTransaction(transaction)
-    // setFormData(initialState)
+    setFormData(initialState)
   }
 
-  useEffect(() => {
-    if (segment) {
-      if (segment.intent.intent === 'add_expense') {
-        setFormData({ ...formData, type: 'Expense' })
-      } else if (segment.intent.intent === "add_income") {
-        setFormData({ ...formData, type: "Income" })
-      } else if (segment.isFinal && segment.intent.intent === "create_transaction") {
-        return createTransaction();
-      } else if (segment.isFinal && segment.intent.intent === "cancel_transaction") {
-        return setFormData(initialState)
-      }
+  // useEffect(() => {
+  //   if (segment) {
+  //     if (segment.intent.intent === 'add_expense') {
+  //       setFormData({ ...formData, type: 'Expense' })
+  //     } else if (segment.intent.intent === "add_income") {
+  //       setFormData({ ...formData, type: "Income" })
+  //     } else if (segment.isFinal && segment.intent.intent === "create_transaction") {
+  //       return createTransaction();
+  //     } else if (segment.isFinal && segment.intent.intent === "cancel_transaction") {
+  //       return setFormData(initialState)
+  //     }
 
-      segment.entities.forEach((e) => {
-        const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
-        switch (e.type) {
-          case 'amount':
-            setFormData({ ...formData, amount: e.value })
-            break;
-          case 'category':
-            if (incomeCategories.map((c) => c.type).includes(category)) {
-              setFormData({ ...formData, category, type: "Income" })
-            } else if (expenseCategories.map((c) => c.type).includes(category)) {
-              setFormData({ ...formData, category, type: "Expense" })
-            }
-            break
-          case 'date':
-            setFormData({ ...formData, date: e.value })
-            break
-          default:
-            break;
-        }
-      })
+  //     segment.entities.forEach((e) => {
+  //       const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+  //       switch (e.type) {
+  //         case 'amount':
+  //           setFormData({ ...formData, amount: e.value })
+  //           break;
+  //         case 'category':
+  //           if (incomeCategories.map((c) => c.type).includes(category)) {
+  //             setFormData({ ...formData, category, type: "Income" })
+  //           } else if (expenseCategories.map((c) => c.type).includes(category)) {
+  //             setFormData({ ...formData, category, type: "Expense" })
+  //           }
+  //           break
+  //         case 'date':
+  //           setFormData({ ...formData, date: e.value })
+  //           break
+  //         default:
+  //           break;
+  //       }
+  //     })
 
-      if (segment.isFinal && formData.amount && formData.category && formData.type && formData.date) {
-        return createTransaction();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [segment])
+  //     if (segment.isFinal && formData.amount && formData.category && formData.type && formData.date) {
+  //       return createTransaction();
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [segment])
 
 
-  const selectedCategories = formData.type === 'Income' ? incomeCategories : expenseCategories
+  // const selectedCategories = formData.type === 'Income' ? incomeCategories : expenseCategories
 
   return (
     <Grid container spacing={2}>
@@ -113,11 +112,16 @@ const Form = () => {
             value={formData.categoryName}
             onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
-            {selectedCategories.map((c) =>
-              <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>)
+            {user.categories.filter(c => c.type === formData.type).map((c) =>
+              <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
             }
+            <Button variant='contained' color='success' 
+              className={classes.category_button}
+              >
+              Add New 
+            </Button>
           </Select>
-        </FormControl>
+        </FormControl>      
       </Grid>
       <Grid item xs={6}>
         <TextField type="number" label="Amount" fullWidth value={formData.amount}

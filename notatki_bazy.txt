@@ -1,0 +1,19 @@
+dodać kaegorie
+każdy uzytkownik swoje transakcje
+
+nie fetchować wszystkich transakcji
+
+
+trigger dodaje każde wydatki
+w triggerze nie fetchować zakonczonych transakcji !!
+trigger ma sie wykonywać codziennie, i nie dodawać historycznych transakcji, tylko te na które przyzsła pora. (rafał dobrze powiedział)
+
+sprawdzić, czy dodaje jak periodical expense to czy dodaje od razu jakąś transakcje
+
+nie można dodać dwóch userów z tym samym emailem
+
+dodać czy user is active
+
+wyświetlanie wydatków z danego przedziału
+
+wyświetlanie wydatków z danej kategorii

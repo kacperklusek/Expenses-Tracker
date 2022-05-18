@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { CardContent, Card, Tabs, Tab } from '@material-ui/core'
 
 import Details from '../Details/Details'
-// import { Details } from '@material-ui/icons'
 
 const DetailWrapper = () => {
     const [tab, changeTab] = useState(0)

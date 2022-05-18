@@ -30,7 +30,7 @@ class MongoModel(BaseModel):
 
 
 class Category(MongoModel):
-    id: OID | None | str
+    id: str | None | OID
     type: str
     name: str
 
