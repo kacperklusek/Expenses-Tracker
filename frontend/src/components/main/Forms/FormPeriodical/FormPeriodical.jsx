@@ -7,7 +7,8 @@ import React, { useState, useContext } from 'react'
 import { ExpenseTrackerContext } from '../../../../context/context'
 import formatDate from '../../../../utils/formatDate'
 
-import useStyles from "./styles"
+import useStyles from "../styles"
+import CategoriesForm from '../CategoriesForm/CategoriesForm'
 
 const initialState = {
   amount: '',
@@ -26,6 +27,8 @@ const FormPeriodical = () => {
   const { addPeriodicalTransaction, user } = useContext(ExpenseTrackerContext)
   // const {segment} = useSpeechContext() TODO add voice controlled periodical payments
   const [open, setOpen] = useState(false)
+  const [categoryFormOpen, setCategoryFormOpen] = useState(false)
+
 
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.categoryName === '' || formData.periodType === '' || !formData.date.includes('-')) return
@@ -51,6 +54,14 @@ const FormPeriodical = () => {
 
     setFormData(initialState)
   }
+
+  const handleClickOpen = (event) => {
+    event.stopPropagation();
+    setCategoryFormOpen(true);
+  };
+
+  const compare = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
+
 
   return (
     <Grid container spacing={2}>
@@ -79,10 +90,17 @@ const FormPeriodical = () => {
             value={formData.categoryName}
             onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
-            {user.categories.filter(c => c.type === formData.type).map((c) =>
+            {user.categories.sort( compare ).filter(c => c.type === formData.type).map((c) =>
               <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
             }
+            <Button variant='contained' color='primary' 
+              className={classes.category_button}
+              onClick={(e) => handleClickOpen(e)}
+              >
+              Add New 
+            </Button>
           </Select>
+          <CategoriesForm open={categoryFormOpen} setOpen={setCategoryFormOpen}/>
         </FormControl>
       </Grid>
       <Grid item xs={12}>

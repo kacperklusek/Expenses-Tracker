@@ -4,9 +4,10 @@ import { ExpenseTrackerContext } from '../../../../context/context'
 import { v4 as uuidv4 } from "uuid"
 import { useSpeechContext } from '@speechly/react-client'
 import { CustomizedSnackbar } from '../../../Snackbar/Snackbar'
+import CategoriesForm from '../CategoriesForm/CategoriesForm'
 
 import formatDate from '../../../../utils/formatDate'
-import useStyles from "./styles"
+import useStyles from "../styles"
 
 const initialState = {
   amount: '',
@@ -21,6 +22,7 @@ const Form = () => {
   const { addTransaction, user } = useContext(ExpenseTrackerContext)
   const { segment } = useSpeechContext()
   const [open, setOpen] = useState(false)
+  const [categoryFormOpen, setCategoryFormOpen] = useState(false)
 
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || formData.category === '' || !formData.date.includes('-')) return
@@ -41,6 +43,14 @@ const Form = () => {
     addTransaction(transaction)
     setFormData(initialState)
   }
+
+  const handleClickOpen = (event) => {
+    event.stopPropagation();
+    setCategoryFormOpen(true);
+  };
+
+  const compare = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
+
 
   // useEffect(() => {
   //   if (segment) {
@@ -99,6 +109,8 @@ const Form = () => {
           <Select
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+            fullWidth
+            margin='dense'
           >
             <MenuItem value="Income">Income</MenuItem>
             <MenuItem value="Expense">Expense</MenuItem>
@@ -112,15 +124,17 @@ const Form = () => {
             value={formData.categoryName}
             onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
-            {user.categories.filter(c => c.type === formData.type).map((c) =>
+            {user.categories.sort(compare).filter(c => c.type === formData.type).map((c) =>
               <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
             }
-            <Button variant='contained' color='success' 
+            <Button variant='contained' color='primary' 
               className={classes.category_button}
+              onClick={(e) => handleClickOpen(e)}
               >
               Add New 
             </Button>
           </Select>
+          <CategoriesForm open={categoryFormOpen} setOpen={setCategoryFormOpen}/>
         </FormControl>      
       </Grid>
       <Grid item xs={6}>
