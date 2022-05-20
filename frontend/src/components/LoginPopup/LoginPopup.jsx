@@ -14,7 +14,7 @@ const LoginPopup = (props) => {
 
   const submitHandler = async e => {
     if (register) {
-      let usr = {
+      let user = {
         name: formData.name,
         surname: formData.surname,
         email: formData.email,
@@ -23,7 +23,21 @@ const LoginPopup = (props) => {
         periodical_transactions: [],
         balance: 0.0
       }
-      await addUser(usr)
+      axios.post(url + "/api/users", user)
+      .then(res => {
+        console.log(res.data.user)
+        user = res.data.user
+        let id = res.data.id
+        user.id = id
+        setUser(user)
+        saveUser(user)
+        props.setTrigger(false);
+        setLoginError(false)
+      })
+      .catch(err => {
+        console.log("error" + err)
+        setLoginError(true)    
+      })
     } else {
       axios.get(url + "/api/users/" + formData.email)
       .then(res => {
@@ -46,7 +60,6 @@ const LoginPopup = (props) => {
     <Card className={classes.popup}>
       <CardContent className={classes.innerPopup}>
         <Grid container spacing={2}>
-          {/* <CloseIcon /> */}
           <Grid item xs={12}>
             <FormLabel>Register</FormLabel>
             <Switch label="Register" color='primary' checked={register} onClick={(e) => setRegister(!register)}/>

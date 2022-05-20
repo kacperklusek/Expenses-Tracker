@@ -17,3 +17,5 @@ dodać czy user is active
 wyświetlanie wydatków z danego przedziału
 
 wyświetlanie wydatków z danej kategorii
+
+lipa jak usunie się kategorie a są z niej jakis transakcje, wtedy nie pokazuje ich na donucie, ale wszędzie indziej pokazuje

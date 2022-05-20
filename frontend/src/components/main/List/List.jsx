@@ -40,11 +40,11 @@ const List = () => {
   }
   
   return (
-    <MUIList dense={false} className={classes.list}>
+    <MUIList dense={false} className={classes.listReg}>
       {user.transactions.map((transaction) => (
         // <Slide direction='down' in mountOnEnter unmountOnExit ref={lastElementRef} key={transaction.id}>
         <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
-        <ListItem>
+          <ListItem>
             <ListItemAvatar>
               <Avatar className={transaction.category.type === "Income" ? classes.avatarIncome : classes.avatarExpense}>
                 <MoneyOff />

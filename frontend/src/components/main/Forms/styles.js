@@ -34,5 +34,5 @@ export default makeStyles((theme) => ({
     marginLeft: "5%",
     paddingTop: "5px",
     paddingBottom: "5px"
-  }
+  },
 }));

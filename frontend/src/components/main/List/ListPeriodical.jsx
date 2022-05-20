@@ -34,7 +34,7 @@ const List = () => {
   }
 
   return (
-    <MUIList dense={false} className={classes.list}>
+    <MUIList dense={false} className={classes.listPer}>
       {user.periodical_transactions.map((transaction) => (
         <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
           <ListItem>

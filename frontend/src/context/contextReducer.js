@@ -1,5 +1,6 @@
 import axios from "axios";
-import { saveUser} from "./context";
+import { saveUser, clearUser } from "./context";
+import { transitions } from '@material-ui/core/styles/transitions';
 
 // state is our transactions list
 
@@ -165,7 +166,6 @@ const contextReducer = (state, action) => {
       user = {...state}
       axios.post(url + "/api/users", action.payload)
         .then(res => {
-          console.log("added user, got response:")
           console.log(res.data.user)
           user = res.data.user
           let id = res.data.id
@@ -193,6 +193,11 @@ const contextReducer = (state, action) => {
           console.log(err)
           return state
         })
+      return user
+    case "LOGOUT":
+      user = {...state}
+      user.id = null
+      clearUser()
       return user
     case "SET_USER":
       console.log('setting user')

@@ -11,7 +11,7 @@ import useStyles from "../styles"
 
 const initialState = {
   amount: '',
-  categoryName: '',
+  category: {},
   type: 'Income',
   date: formatDate(new Date()),
 }
@@ -26,13 +26,9 @@ const Form = () => {
 
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || formData.category === '' || !formData.date.includes('-')) return
-    const category = {
-      type: formData.type,
-      name: formData.categoryName
-    }
 
     const transaction = {
-      category: category,
+      category: formData.category,
       date: new Date(formData.date).toISOString(),
       amount: parseFloat(formData.amount),
       id: uuidv4()
@@ -44,8 +40,7 @@ const Form = () => {
     setFormData(initialState)
   }
 
-  const handleClickOpen = (event) => {
-    event.stopPropagation();
+  const handleClickOpen = () => {
     setCategoryFormOpen(true);
   };
 
@@ -122,14 +117,14 @@ const Form = () => {
           <InputLabel>Category</InputLabel>
           <Select
             value={formData.categoryName}
-            onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
             {user.categories.sort(compare).filter(c => c.type === formData.type).map((c) =>
-              <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
+              <MenuItem key={c.name} value={c}>{c.name}</MenuItem>)
             }
             <Button variant='contained' color='primary' 
               className={classes.category_button}
-              onClick={(e) => handleClickOpen(e)}
+              onClick={handleClickOpen}
               >
               Add New 
             </Button>

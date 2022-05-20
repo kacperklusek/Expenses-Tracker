@@ -1,8 +1,6 @@
 import motor.motor_asyncio
-import pymongo
 from bson import ObjectId
-
-from model import Transaction, User
+from datetime import datetime
 
 user = "test-user"
 password = "test-user-password"
@@ -12,31 +10,31 @@ database = client.test
 collection = database.Users
 
 INITIAL_CATEGORIES = [
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Business",
      "type": "Income"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Investments",
      "type": "Income"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Gifts",
      "type": "Income"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Lottery",
      "type": "Income"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Car",
      "type": "Expense"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Food",
      "type": "Expense"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Shopping",
      "type": "Expense"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "Clothing",
      "type": "Expense"},
-    {'_id': str(ObjectId()),
+    {'id': str(ObjectId()),
      "name": "House",
      "type": "Expense"}
 ]
@@ -52,16 +50,14 @@ async def fetch_one_transaction(user_id, tid):
         {'$unwind': '$transactions'},
         {'$replaceWith': '$transactions'},
         {'$match': {
-            'id': tid
+            "id": tid
         }}
     ]
+
     cursor = collection.aggregate(pipeline)
     async for doc in cursor:
-        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
-        doc['id'] = str(doc['id'])
-        print(doc)
         return doc
-    return 1
+    return False
 
 
 async def fetch_n_transactions(user_id, have, n):
@@ -80,35 +76,33 @@ async def fetch_n_transactions(user_id, have, n):
     cursor = collection.aggregate(pipeline)
 
     async for doc in cursor:
-        # id trzeba jak niżej zamienić na stringa, bo się sypie
-        doc['id'] = str(doc['id'])
         transactions.append(doc)
 
     return transactions
 
 
-# async def fetch_transactions_from_month(user_id, month):
-#     pipeline = [
-#         {"$match": {
-#             '_id': ObjectId(user_id),
-#         }},
-#         {'$unwind': '$transactions'},
-#         {"$match": {
-#             # nie działa ten match kompletnie
-#             # 'transactions': {"transactions.amount": 250.0}
-#         }},
-#         {'$replaceWith': '$transactions'}
-#     ]
+async def fetch_transactions_by_dates(user_id, from_date, to_date):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$transactions'},
+        {'$replaceWith': '$transactions'},
+        {"$match": {
+            "date": {
+                "$gte": from_date,
+                "$lte": to_date
+            }
+        }},
+    ]
 
-#     transactions = []
-#     cursor = collection.aggregate(pipeline)
+    transactions = []
+    cursor = collection.aggregate(pipeline)
 
-#     async for doc in cursor:
-#         # id trzeba jak niżej zamienić na stringa, bo się sypie
-#         doc['id'] = str(doc['id'])
-#         transactions.append(doc)
+    async for doc in cursor:
+        transactions.append(doc)
 
-#     return transactions
+    return transactions
 
 
 async def push_transaction(user_id, transaction):
@@ -154,10 +148,8 @@ async def fetch_one_periodical_transaction(user_id, tid):
     ]
     cursor = collection.aggregate(pipeline)
     async for doc in cursor:
-        # TO TRZEBA ZAMIENIĆ BO SIE PSUJE WTFFF
-        doc['id'] = str(doc['id'])
         return doc
-    return 1
+    return False
 
 
 async def fetch_n_periodical_transactions(user_id, have, n):
@@ -176,8 +168,6 @@ async def fetch_n_periodical_transactions(user_id, have, n):
     cursor = collection.aggregate(pipeline)
 
     async for doc in cursor:
-        # id trzeba jak niżej zamienić na stringa, bo się sypie
-        doc['id'] = str(doc['id'])
         transactions.append(doc)
 
     return transactions
@@ -204,7 +194,6 @@ async def remove_periodical_transaction(uid, tid):
     ]
 
     res = await collection.update_one(*pipeline)
-    print(res)
     return True
 
 
@@ -228,7 +217,6 @@ async def fetch_categories(user_id):
 
 
 async def create_category(user_id, category):
-    category.id = ObjectId()
     pipeline = [
         {'_id': ObjectId(user_id)},
         {'$push': {'categories': dict(category)}}
@@ -249,7 +237,6 @@ async def remove_category(uid, cid):
     ]
 
     res = await collection.update_one(*pipeline)
-    print(res)
     return True
 
 

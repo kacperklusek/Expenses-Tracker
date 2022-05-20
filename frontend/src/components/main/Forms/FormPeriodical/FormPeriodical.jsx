@@ -29,7 +29,6 @@ const FormPeriodical = () => {
   const [open, setOpen] = useState(false)
   const [categoryFormOpen, setCategoryFormOpen] = useState(false)
 
-
   const createTransaction = () => {
     if (Number.isNaN(Number(formData.amount)) || Number(formData.amount) <= 0 || Number(formData.period) <= 0 || formData.categoryName === '' || formData.periodType === '' || !formData.date.includes('-')) return
 
@@ -58,7 +57,8 @@ const FormPeriodical = () => {
   const handleClickOpen = (event) => {
     event.stopPropagation();
     setCategoryFormOpen(true);
-  };
+  }
+
 
   const compare = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
 
@@ -91,7 +91,9 @@ const FormPeriodical = () => {
             onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
           >
             {user.categories.sort( compare ).filter(c => c.type === formData.type).map((c) =>
-              <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>)
+              <MenuItem key={c.name} value={c.name}>
+                {c.name}
+              </MenuItem>)
             }
             <Button variant='contained' color='primary' 
               className={classes.category_button}

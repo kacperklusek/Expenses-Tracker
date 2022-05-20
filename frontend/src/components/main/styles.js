@@ -22,6 +22,7 @@ export default makeStyles((theme) => ({
     margin: '20px 0',
   },
   root: {
-    minHeight: '541.39px'
+    height: '635px',
+    width: '400px'
   }
 }));

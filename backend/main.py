@@ -1,7 +1,9 @@
+from datetime import datetime
+
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction
+from model import Transaction, User, Category, PeriodicalTransaction, DateSelect
 
 from database import (
     fetch_one_transaction,
@@ -10,7 +12,7 @@ from database import (
     remove_transaction,
     fetch_one_periodical_transaction,
     fetch_n_periodical_transactions,
-    # fetch_transactions_from_month,
+    fetch_transactions_by_dates,
     push_periodical_transaction,
     remove_periodical_transaction,
     create_category,
@@ -51,10 +53,10 @@ async def get_n_transactions(uid: str, have: int, n: int):
     return response
 
 
-# @app.get("/api/users/{uid}/date")
-# async def get_transactions_from_month(uid: str):
-#     response = await fetch_transactions_from_month(uid, 5)
-#     return response
+@app.get("/api/users/{uid}/by_date/transactions/{from_date}/{to_date}")
+async def get_transactions_by_date(uid: str, from_date: datetime, to_date: datetime):
+    response = await fetch_transactions_by_dates(uid, from_date, to_date)
+    return response
 
 
 @app.post("/api/users/{uid}/transactions")

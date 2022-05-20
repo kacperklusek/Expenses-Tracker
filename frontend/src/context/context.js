@@ -52,6 +52,7 @@ export const Provider = ({ children }) => {
   const deleteCategory = (id) => dispatch({type: "DELETE_CATEGORY", payload: id})
   const addUser = (userData) => dispatch({type: "ADD_USER", payload: userData})
   const getUser = (loginData) => dispatch({type: "LOGIN", payload: loginData})
+  const logout = () => dispatch({type: "LOGOUT"})
   const setUser = (newUser) => dispatch({type: "SET_USER", payload:newUser})
   const url = "http://localhost:8000"
 
@@ -69,6 +70,7 @@ export const Provider = ({ children }) => {
       getCategories,
       addUser,
       getUser,
+      logout,
       setUser,
       user,
       url

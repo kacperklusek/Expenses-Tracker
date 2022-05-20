@@ -5,7 +5,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from pydantic import BaseModel, BaseConfig
 from typing import List
-from datetime import date, datetime
+from datetime import datetime
 
 
 class OID(str):
@@ -61,4 +61,8 @@ class User(MongoModel):
     periodical_transactions: List[PeriodicalTransaction]
     balance: float
 
+
+class DateSelect(MongoModel):
+    from_date: datetime
+    to_date: datetime
 
