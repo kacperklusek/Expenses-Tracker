@@ -23,6 +23,6 @@ export default makeStyles((theme) => ({
   },
   root: {
     height: '635px',
-    width: '400px'
+    minWidth: '400px'
   }
 }));

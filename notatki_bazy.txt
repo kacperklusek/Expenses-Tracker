@@ -1,21 +1,21 @@
-dodać kaegorie
-każdy uzytkownik swoje transakcje
+DONE dodać kaegorie 
+DONE każdy uzytkownik swoje transakcje
 
-nie fetchować wszystkich transakcji
+DONE nie fetchować wszystkich transakcji
 
 
-trigger dodaje każde wydatki
-w triggerze nie fetchować zakonczonych transakcji !!
-trigger ma sie wykonywać codziennie, i nie dodawać historycznych transakcji, tylko te na które przyzsła pora. (rafał dobrze powiedział)
+DONE trigger dodaje każde wydatki
+DONE w triggerze nie fetchować zakonczonych transakcji !!
+DONE trigger ma sie wykonywać codziennie, i nie dodawać historycznych transakcji, tylko te na które przyzsła pora. (rafał dobrze powiedział)
 
-sprawdzić, czy dodaje jak periodical expense to czy dodaje od razu jakąś transakcje
+DONE - NIEsprawdzić, czy dodaje jak periodical expense to czy dodaje od razu jakąś transakcje
 
 nie można dodać dwóch userów z tym samym emailem
 
 dodać czy user is active
 
-wyświetlanie wydatków z danego przedziału
+DONE wyświetlanie transakcji z danego przedziału
 
-wyświetlanie wydatków z danej kategorii
+TODO wyświetlanie wydatków z danej kategorii
 
-lipa jak usunie się kategorie a są z niej jakis transakcje, wtedy nie pokazuje ich na donucie, ale wszędzie indziej pokazuje
+TODO - DO PRZEMYŚLENIA - lipa jak usunie się kategorie a są z niej jakis transakcje, wtedy nie pokazuje ich na donucie, ale wszędzie indziej pokazuje

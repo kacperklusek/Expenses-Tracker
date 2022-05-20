@@ -3,7 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction, DateSelect
+from model import Transaction, User, Category, PeriodicalTransaction, FilterModel
 
 from database import (
     fetch_one_transaction,
@@ -13,6 +13,7 @@ from database import (
     fetch_one_periodical_transaction,
     fetch_n_periodical_transactions,
     fetch_transactions_by_dates,
+    fetch_filtered_transactions,
     push_periodical_transaction,
     remove_periodical_transaction,
     create_category,
@@ -58,6 +59,18 @@ async def get_transactions_by_date(uid: str, from_date: datetime, to_date: datet
     response = await fetch_transactions_by_dates(uid, from_date, to_date)
     return response
 
+# I am using post here to allow attachment of data
+@app.post("/api/users/{uid}/filter/transactions")
+async def filter_transactions(uid: str, filter_data: FilterModel):
+    response = await fetch_filtered_transactions(
+        uid,
+        filter_data.categories,
+        filter_data.from_date,
+        filter_data.to_date,
+        filter_data.from_amount,
+        filter_data.to_amount
+    )
+    return response
 
 @app.post("/api/users/{uid}/transactions")
 async def add_transaction(uid: str, transaction: Transaction):

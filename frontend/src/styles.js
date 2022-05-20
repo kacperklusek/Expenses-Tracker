@@ -27,13 +27,13 @@ export default makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(2),
     },
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: "flex",
       flexDirection: "column",
       alignItems: "center"
     },
 
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       display: "flex",
       flexDirection: "row",
     },

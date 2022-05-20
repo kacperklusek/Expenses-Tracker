@@ -104,6 +104,37 @@ async def fetch_transactions_by_dates(user_id, from_date, to_date):
 
     return transactions
 
+async def fetch_filtered_transactions(user_id, categories, from_date, to_date, from_amount, to_amount):
+    pipeline = [
+        {"$match": {
+            '_id': ObjectId(user_id),
+        }},
+        {'$unwind': '$transactions'},
+        {'$replaceWith': '$transactions'},
+        {"$match": {
+            "date": {
+                "$gte": from_date,
+                "$lte": to_date
+            },
+            "amount": {
+                "$gte": from_amount,
+                "$lte": to_amount
+            },
+            "category.id": {
+                "$in": [c.id for c in categories]
+            }
+        }},
+    ]
+
+    transactions = []
+    cursor = collection.aggregate(pipeline)
+
+    async for doc in cursor:
+        transactions.append(doc)
+
+    print(transactions)
+    return transactions
+
 
 async def push_transaction(user_id, transaction):
     transaction.category = dict(transaction.category)

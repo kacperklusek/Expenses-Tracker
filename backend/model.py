@@ -62,7 +62,9 @@ class User(MongoModel):
     balance: float
 
 
-class DateSelect(MongoModel):
+class FilterModel(MongoModel):
     from_date: datetime
     to_date: datetime
-
+    from_amount: int
+    to_amount: int
+    categories: List[Category]
