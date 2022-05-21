@@ -20,6 +20,7 @@ const contextReducer = (state, action) => {
       console.log("deleting..."+action.payload);
       user = {...state}
       user.transactions = user.transactions.filter((t) => t.id !== action.payload);
+      user.balance += action.payload.category.type == "Income" ? action.payload.amount : -action.payload.amount
 
       axios.delete(url + `/api/users/${user.id}/transactions/${action.payload}`)
         .then(res => {
@@ -36,7 +37,8 @@ const contextReducer = (state, action) => {
       user = {...state}
       user.transactions = [action.payload, ...state.transactions]
       user.transactions = [...new Set(user.transactions)]
-      console.log("adding " + action.payload);
+      user.balance += action.payload.category.type == "Income" ? action.payload.amount : -action.payload.amount
+      
       axios.post(url + `/api/users/${user.id}/transactions`, action.payload)
         .then(res => {
           console.log("succesfully added transaction");

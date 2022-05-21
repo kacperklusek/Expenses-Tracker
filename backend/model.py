@@ -5,7 +5,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from pydantic import BaseModel, BaseConfig
 from typing import List
-from datetime import datetime
+from datetime import datetime, date
 
 
 class OID(str):

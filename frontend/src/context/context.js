@@ -35,8 +35,6 @@ export const Provider = ({ children }) => {
       let usr = JSON.parse(sessionStorage.getItem('user'))
       console.log(usr)
       dispatch({ type: "USER_IN_STORAGE", payload: usr })
-      // dispatch({ type: "GET_TRANSACTIONS", payload: { have: 0, n: 10}})
-      // dispatch({ type: "GET_PERIODICAL_TRANSACTIONS", payload: { have: 0, n: 10}})
       }
   }, [])
 

@@ -16,6 +16,7 @@ from database import (
     fetch_filtered_transactions,
     push_periodical_transaction,
     remove_periodical_transaction,
+    predict_balance,
     create_category,
     remove_category,
     fetch_categories,
@@ -75,7 +76,6 @@ async def filter_transactions(uid: str, filter_data: FilterModel):
 @app.post("/api/users/{uid}/transactions")
 async def add_transaction(uid: str, transaction: Transaction):
     response = await push_transaction(uid, transaction)
-    print(response)
     if response:
         return transaction
     raise HTTPException(400, "cannot add transaction")
@@ -90,6 +90,7 @@ async def delete_transaction(uid: str, id: str):
 
 
 # Periodical transactions CRUD
+
 @app.get("/api/users/{uid}/periodical/{tid}")
 async def get_periodical_transaction(uid: str, tid: str):
     response = await fetch_one_periodical_transaction(uid, tid)
@@ -119,7 +120,12 @@ async def delete_periodical_transaction(uid: str, ptid: str):
         return f"Deleted periodical transaction with id {ptid} for user with uid:{uid}"
     raise HTTPException(400, f"Error deleting periodical transaction with id:{ptid} for user with uid:{uid}")
 
-
+@app.get("/api/users/{uid}/predict/periodical/{end_date}")
+async def get_predicted_balance(uid: str, end_date: datetime):
+    response = await predict_balance(uid, end_date)
+    if response or response == 0:
+        return response
+    raise HTTPException(400, f"Error predicting value for uid: {uid} and end_date: {end_date}")
 
 
 
@@ -152,3 +158,9 @@ async def login(email: str):
         return usr
     raise HTTPException(400, "Error fetching user, probably no user with given email")
 
+
+
+from database import update_balance
+@app.get("/test/{uid}")
+async def test(uid: str):
+    await update_balance(uid, 20, "Expense")

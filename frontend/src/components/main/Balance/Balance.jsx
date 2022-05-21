@@ -7,6 +7,7 @@ import { ExpenseTrackerContext } from '../../../context/context'
 
 import formatDate from '../../../utils/formatDate'
 import useStyles from "./styles"
+import axios from "axios"
 
 
 const initialState = {
@@ -16,51 +17,34 @@ const initialState = {
 
 const Balance = () => {
   const classes = useStyles()
-  const { user } = useContext(ExpenseTrackerContext)
+  const { user, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState(initialState)
   const [targetBalance, setTargetBalance] = useState(user.balance)
+  const [isLoading, setIsLoading] = useState(false)
 
   const periodicalTransactions = user.transactions.filter((transaction) => transaction.period !== null)
 
-  const getBalance = () => {
+  const getBalance = async () => {
     if (!formData.date.includes('-')) return
     const target = new Date(formData.date)
-    const today = new Date()
-    if (target < today) {
+    if (target < new Date()) {
       return
     }
-    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-    const diffTime = Math.abs(target - today)
-    const diffDays = Math.ceil(diffTime / _MS_PER_DAY) // difference in days
-
-    var yearsDiff = target.getFullYear() - today.getFullYear()
-    var monthsDiff = target.getMonth() - today.getMonth()
-    var daysDiff = target.getDate() - today.getDate() // diference in days of the month (max 31)
-
-    var fullYears = yearsDiff - (monthsDiff > 0 || (monthsDiff === 0 && daysDiff >= 0) ? 0 : 1)
-    var fullMonths = monthsDiff - (daysDiff >= 0 ? 0 : 1)
+    setIsLoading(true)
 
     var newBalance = user.balance
 
-    periodicalTransactions.forEach(tran => {
-      var delta = 0
-      switch (tran.periodType) {
-        case "Day":
-          delta += Math.floor(diffDays / tran.period) * tran.amount
-          break;
-        case "Month":
-          delta += Math.floor((yearsDiff * 12 + fullMonths) / tran.period) * tran.amount
-          break;
-        case "Year":
-          delta += Math.floor(fullYears / tran.period) * tran.amount
-          break;
-        default:
-          console.log("error: ", tran);
-      }
-      newBalance += (tran.type === "Income" ? delta : -delta)
-    });
-
-    return newBalance
+    axios.get(url + `/api/users/${user.id}/predict/periodical/${target.toISOString()}`)
+      .then(res => {
+        newBalance += res.data
+        setTargetBalance(newBalance)
+        setIsLoading(false)
+      })
+      .catch(err => {
+        setTargetBalance("error")
+        console.log(err)
+        setIsLoading(false)
+      })
   }
 
 
@@ -70,13 +54,14 @@ const Balance = () => {
       <Divider className={classes.divider} />
       <br />
       <Typography align="center" variant="h6">Your balance on {formData.date}: <big>${targetBalance}</big></Typography>
+      { isLoading ? <Typography align="center">Loading...</Typography> : ""}
       <br />
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <TextField fullWidth label="Target Date" type="date" value={formData.date}
             onChange={(e) => setFormData({ ...formData, date: e.target.value })} />
         </Grid>
-        <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={() => setTargetBalance(getBalance())}>Calculate</Button>
+        <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={() => getBalance()}>Calculate</Button>
       </Grid>
 
     </CardContent>

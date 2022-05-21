@@ -35,7 +35,8 @@ const FormPeriodical = () => {
     const category = {
       type: formData.type,
       name: formData.categoryName
-    }    
+    }
+
     var transaction = {
       category: category,
       date: new Date(formData.date).toISOString(),
