@@ -12,7 +12,7 @@ const contextReducer = (state, action) => {
   let user
 
   switch (action.type) {
-    case "USER_IN_LOCALSTORAGE":
+    case "USER_IN_STORAGE":
       user = action.payload
       console.log("user found in locastorage")
       return user

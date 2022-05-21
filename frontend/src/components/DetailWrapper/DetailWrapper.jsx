@@ -7,7 +7,7 @@ const DetailWrapper = () => {
     const [tab, changeTab] = useState(0)
 
     return (
-        <Card style={{minWidth: '348px'}}>
+        <Card >
             <CardContent>
                 <Tabs
                     variant='fullWidth'

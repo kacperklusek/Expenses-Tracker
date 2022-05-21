@@ -20,11 +20,6 @@ const App = () => {
   const main = useRef(null)
   const [buttonPopup, setButtonPopup] = useState(true);
 
-
-  // if (!localStorage.getItem("user")) {
-  //   setButtonPopup(true)
-  // }
-
   const executeScroll = () => main.current.scrollIntoView();
 
   useEffect(() => {
@@ -45,13 +40,10 @@ const App = () => {
             Open Popup 
           </button> */}
           <Grid className={classes.grid} container spacing={0} alignItems="center" justifyContent="center" style={{ 'height': '100vh' }}>
-            <Grid item xs={11} sm={4} className={classes.desktop}>
-              <DetailWrapper/>
-            </Grid>
-            <Grid ref={main} item xs={11} sm={6} style={{ 'minWidth': '325px' }} className={classes.main}>
+            <Grid ref={main} item xs={11} md={6} style={{ 'minWidth': '325px' }} >
               <Main page={page}/>
             </Grid>
-            <Grid item xs={11} sm={4} className={classes.mobile}>
+            <Grid item xs={11} md={4}>
               <DetailWrapper/>
             </Grid>
           </Grid>
