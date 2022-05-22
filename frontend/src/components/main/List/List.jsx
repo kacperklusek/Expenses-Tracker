@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { List as MUIList, ListItem, ListItemAvatar, ListItemText, Avatar, ListItemSecondaryAction, IconButton, Slide, Button, Typography } from "@material-ui/core"
 import { Delete, MoneyOff } from '@material-ui/icons'
-import useInfiniteScroll from 'react-infinite-scroll-hook'
+// import useInfiniteScroll from 'react-infinite-scroll-hook'
 
 import { ExpenseTrackerContext, saveUser } from '../../../context/context'
 import useStyles from "./styles"

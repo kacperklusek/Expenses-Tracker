@@ -182,7 +182,7 @@ async def update_balance(uid, amount, tran_type):
     res = await collection.update_one(
         {"_id": ObjectId(uid)},
         {"$inc": {
-            "amount": amount
+            "balance": amount
         }}
     )
 
@@ -194,22 +194,23 @@ async def update_balance(uid, amount, tran_type):
 
 # periodical transactions CRUD
 
-async def fetch_one_periodical_transaction(uid, tid):
-    pipeline = [
-        {"$match": {
-            '_id': ObjectId(uid),
-        }},
-        {'$unwind': '$periodical_transactions'},
-        {'$replaceWith': '$periodical_transactions'},
-        {'$match': {
-            'id': tid
-        }},
-        {'$limit': 1}
-    ]
-    cursor = collection.aggregate(pipeline)
-    async for doc in cursor:
-        return doc
-    return False
+# to jest chyba nie potrzebne
+# async def fetch_one_periodical_transaction(uid, tid):
+#     pipeline = [
+#         {"$match": {
+#             '_id': ObjectId(uid),
+#         }},
+#         {'$unwind': '$periodical_transactions'},
+#         {'$replaceWith': '$periodical_transactions'},
+#         {'$match': {
+#             'id': tid
+#         }},
+#         {'$limit': 1}
+#     ]
+#     cursor = collection.aggregate(pipeline)
+#     async for doc in cursor:
+#         return doc
+#     return False
 
 
 async def fetch_n_periodical_transactions(uid, have, n):

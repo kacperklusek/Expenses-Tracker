@@ -41,12 +41,12 @@ app.add_middleware(
 )
 
 
-@app.get("/api/users/{uid}/transactions/{tid}")
-async def get_transaction(uid: str, tid: str):
-    response = await fetch_one_transaction(uid, tid)
-    if response:
-        return response
-    raise HTTPException(400, f"cannot fetch transaction with id:{tid} for user_id:{uid}")
+# @app.get("/api/users/{uid}/transactions/{tid}")
+# async def get_transaction(uid: str, tid: str):
+#     response = await fetch_one_transaction(uid, tid)
+#     if response:
+#         return response
+#     raise HTTPException(400, f"cannot fetch transaction with id:{tid} for user_id:{uid}")
 
 # fetch n last transactions skipping {have} transactions because you could have already fetched {have} transactions
 @app.get("/api/users/{uid}/transactions/{have}/{n}")
