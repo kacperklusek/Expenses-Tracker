@@ -125,7 +125,7 @@ class FilterModel(MongoModel):
     categories: List[Category]
 ```
 
-Klaa FilterModel służy do przesyłania ustawień filtrowania transakcji.
+Klasa FilterModel służy do przesyłania ustawień filtrowania transakcji.
 
 ### 3. Operacje na bazie danych
 
@@ -474,7 +474,7 @@ Komunikacja z serwerem jest zaimplementowana w pliku main.py
 
 Do dodawania nowych transakcji na podstawie periodical_transaction, dochodzi za pomocą triggera umieszczonego w serwisie Mongo Atlas. Trigger ten jest uruchamiany raz dziennie o danej godzinie, następnie dla każdego użytkownika pobiera on jego periodical transactions i sprawdza czy powinien on dodać nową transakcje dla danego użytkownika. Trigger pobiera tylko te transakcje, których final date jest większe niż aktualna data lub jest nullem.
 
-```javasscript
+```javascript
 exports = async function() {
   const { v4: uuidv4 } = require("uuid");
   
