@@ -8,7 +8,7 @@ DONE trigger dodaje każde wydatki
 DONE w triggerze nie fetchować zakonczonych transakcji !!
 DONE trigger ma sie wykonywać codziennie, i nie dodawać historycznych transakcji, tylko te na które przyzsła pora. (rafał dobrze powiedział)
 
-DONE - NIEsprawdzić, czy dodaje jak periodical expense to czy dodaje od razu jakąś transakcje
+DONE - NIE - sprawdzić, czy dodaje jak periodical expense to czy dodaje od razu jakąś transakcje
 
 nie można dodać dwóch userów z tym samym emailem
 
@@ -16,6 +16,6 @@ dodać czy user is active
 
 DONE wyświetlanie transakcji z danego przedziału
 
-TODO wyświetlanie wydatków z danej kategorii
+DONE wyświetlanie wydatków z danej kategorii
 
 TODO - DO PRZEMYŚLENIA - lipa jak usunie się kategorie a są z niej jakis transakcje, wtedy nie pokazuje ich na donucie, ale wszędzie indziej pokazuje
