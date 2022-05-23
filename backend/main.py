@@ -53,8 +53,8 @@ app.add_middleware(
 )
 ### ----------------------------------------
 @app.post("/token", response_model=Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await authenticate_user(form_data.username, form_data.password)
+async def login_for_access_token(form_data: LoginModel):
+    user = await authenticate_user(form_data.email, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="wywalilo sie")
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -181,9 +181,10 @@ async def get_categories(uid: str):
 
 # returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
 @app.get("/api/users")
-async def login(loginModel: LoginModel):
-    email = loginModel.email
-    password = loginModel.password
+async def login(model: LoginModel):
+    print('dupa')
+    email = model.email
+    password = model.password
 
     usr = await get_user(email)
     if usr:

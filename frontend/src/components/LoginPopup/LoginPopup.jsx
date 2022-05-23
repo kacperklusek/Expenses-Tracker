@@ -5,7 +5,7 @@ import { Alert } from '@material-ui/lab'
 import { ExpenseTrackerContext, saveUser } from '../../context/context'
 import axios from "axios";
 import { useNavigate } from "react-router";
-
+import Cookies from "js-cookie"
 
 const LoginPopup = (props) => {
   const navigate = useNavigate();
@@ -46,18 +46,29 @@ const LoginPopup = (props) => {
         setLoginError(true)    
       })
     } else {
-      let userToLogin = {
+      const userToLogin = {
         email: formData.email,
         password: formData.password
       }
-      axios.get(url + "/api/users", userToLogin)
+      axios.post(url + "/token", userToLogin)
       .then(res => {
-        res.data.id = res.data._id
-        setUser(res.data)
-        saveUser(res.data)
-        props.setTrigger(false);
-        setLoginError(false)
-        navigate("/main");
+        Cookies.set("token", res.data.access_token)
+        const headers = {
+          Authorization: `Bearer ${res.data.access_token}`
+        }
+        axios.get(url + "/users/me", {headers})
+        .then(res => {
+          res.data.id = res.data._id
+          setUser(res.data)
+          saveUser(res.data)
+          props.setTrigger(false)
+          setLoginError(false)
+          navigate('/main')
+        })
+        .catch(err => {
+          console.log(err)
+          setLoginError(true)
+        })
       })
       .catch(err => {
         console.log(err)

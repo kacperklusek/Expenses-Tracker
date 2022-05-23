@@ -19,8 +19,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-import model
-
 user = "test-user"
 password = "test-user-password"
 
@@ -62,6 +60,9 @@ INITIAL_CATEGORIES = [
 #AUTH
 
 async def verify_password(plain_password, hashed_password):
+    print("context: ", pwd_context)
+    print("context.verify: ", pwd_context.verify)
+    print("verify: ", pwd_context.verify(plain_password, hashed_password))
     return pwd_context.verify(plain_password, hashed_password)
 
 async def hash_password(password):
