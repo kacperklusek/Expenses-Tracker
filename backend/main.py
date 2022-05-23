@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from argon2 import argon2_hash
 
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends
