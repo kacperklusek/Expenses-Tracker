@@ -4,7 +4,7 @@ from argon2 import argon2_hash
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction, FilterModel, TokenData, Token, LoginModel
+from model import Transaction, User, Category, PeriodicalTransaction, FilterModel, TokenData, Token, LoginModel,UserToRegister
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -67,6 +67,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 @app.get("/users/me")
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@app.post("/api/users")
+async def create_user(usr: UserToRegister):
+    response = await add_user(usr)
+    return response
+
 
 ### ----------------------------------------
 
@@ -173,12 +179,6 @@ async def get_categories(uid: str):
     response = await fetch_categories(uid)
     return response
 
-
-@app.post("/api/users")
-async def create_user(usr: User):
-    response = await add_user(usr)
-    return response
-
 # returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
 @app.get("/api/users")
 async def login(loginModel: LoginModel):
@@ -189,7 +189,6 @@ async def login(loginModel: LoginModel):
     if usr:
         return usr
     raise HTTPException(400, "Error fetching user, probably no user with given email")
-
 
 
 from database import update_balance

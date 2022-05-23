@@ -86,6 +86,9 @@ async def authenticate_user(username: str, password: str):
     return user
 
 async def add_user(usr):
+    password = usr.password
+    usr = usr.user
+    usr.hashed_password = await hash_password(password)
     usr.categories = INITIAL_CATEGORIES
     res = await collection.insert_one(dict(usr))
     response = {
@@ -119,17 +122,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise HTTPException(status_code=400, detail="wywalilo sie")
     return user
-
-# async def load_user(email):
-#     usr = await collection.find_one({"email": email})
-#     if not usr:
-#         return False
-#     usr['_id'] = str(usr.get("_id"))
-#     first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
-#     first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
-#     usr['transactions'] = first_10_tran
-#     usr['periodical_transactions'] = first_10_tran_periodical
-#     return usr
 
 
 # Regular Transactions CRUD

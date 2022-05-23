@@ -57,12 +57,15 @@ class User(MongoModel):
     name: str
     surname: str
     email: str
-    hashed_password: str
+    hashed_password: str | None
     categories: List[Category]
     transactions: List[Transaction]
     periodical_transactions: List[PeriodicalTransaction]
     balance: float
 
+class UserToRegister(MongoModel):
+    user: User
+    password: str
 
 class FilterModel(MongoModel):
     from_date: datetime
