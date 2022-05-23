@@ -1,4 +1,5 @@
-from typing import List, Optional
+from types import UnionType
+from typing import List, Optional, Union
 from xmlrpc.client import boolean
 
 from bson import ObjectId
@@ -69,3 +70,13 @@ class FilterModel(MongoModel):
     from_amount: int
     to_amount: int
     categories: List[Category]
+
+# auth
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None

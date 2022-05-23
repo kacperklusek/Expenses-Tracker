@@ -1,14 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from argon2 import hash_password
 
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction, FilterModel
+from model import Transaction, User, Category, PeriodicalTransaction, FilterModel, TokenData, Token
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 from database import (
     fetch_one_transaction,
@@ -27,9 +31,9 @@ from database import (
     fetch_categories,
     add_user,
     get_user,
-    hash_password,
-    fake_decode_token,
-    get_current_user
+    get_current_user,
+    authenticate_user,
+    create_access_token
 )
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -48,16 +52,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 ### ----------------------------------------
-@app.post("/token")
-async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = await get_user(form_data.username)
+@app.post("/token", response_model=Token)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await authenticate_user(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-    hashed_password = await hash_password(form_data.password)
-    if not hashed_password == user.hashed_password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
-
-    return {"access_token": user.email, "token_type": "bearer"}
+        raise HTTPException(status_code=400, detail="wywalilo sie")
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = await create_access_token(
+        data={"sub": user.email}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
 @app.get("/users/me")
