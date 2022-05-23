@@ -13,6 +13,7 @@ const LoginPopup = (props) => {
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
   const [loginError, setLoginError] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const submitHandler = async e => {
     if (register) {
@@ -29,8 +30,10 @@ const LoginPopup = (props) => {
         user: user,
         password: formData.password
       }
+      setLoading(true)
       axios.post(url + "/api/users", userToRegister)
       .then(res => {
+        setLoading(false)
         console.log(res.data.user)
         user = res.data.user
         let id = res.data.id
@@ -42,6 +45,7 @@ const LoginPopup = (props) => {
         navigate("/main");
       })
       .catch(err => {
+        setLoading(false)
         console.log("error" + err)
         setLoginError(true)    
       })
@@ -50,6 +54,7 @@ const LoginPopup = (props) => {
         email: formData.email,
         password: formData.password
       }
+      setLoading(true)
       axios.post(url + "/token", userToLogin)
       .then(res => {
         Cookies.set("token", res.data.access_token)
@@ -58,6 +63,7 @@ const LoginPopup = (props) => {
         }
         axios.get(url + "/users/me", {headers})
         .then(res => {
+          setLoading(false)
           res.data.id = res.data._id
           setUser(res.data)
           saveUser(res.data)
@@ -66,11 +72,13 @@ const LoginPopup = (props) => {
           navigate('/main')
         })
         .catch(err => {
+          setLoading(false)
           console.log(err)
           setLoginError(true)
         })
       })
       .catch(err => {
+        setLoading(false)
         console.log(err)
         setLoginError(true)
       })
@@ -106,6 +114,10 @@ const LoginPopup = (props) => {
             <Alert severity="error">Wrong username or password</Alert>
             :
             ""
+          }
+          {
+            loading ? 
+            <p>Loading ...</p> : ""
           }
           <Grid item xs={12}>
             <FormControl fullWidth color='primary'>

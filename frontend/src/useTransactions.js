@@ -8,9 +8,8 @@ const useTransactions = (title) => {
   const transactionsPerType = user.transactions.filter((t) => t.category.type === title)
   // code below just sums all elements
   const total = transactionsPerType.reduce((acc, currVal) => acc += currVal.amount, 0)
-  const categories = user.categories.filter(c => c.type === title)
-  // let categories = user.transactions.map(t => t.category).filter(t => t.category.type == title)
-  // categories = [...new Set(categories)]
+  let categories = user.transactions.filter(t => t.category.type == title).map(t => t.category)
+  categories = [...new Set(categories)]
 
   categories.forEach(c => c.amount = 0)
   transactionsPerType.forEach((t) => {
