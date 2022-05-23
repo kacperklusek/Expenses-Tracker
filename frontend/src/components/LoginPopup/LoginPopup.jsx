@@ -4,9 +4,11 @@ import { TextField, Grid, Button, FormControl, Card, CardContent, Switch, FormLa
 import { Alert } from '@material-ui/lab'
 import { ExpenseTrackerContext, saveUser } from '../../context/context'
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 
 const LoginPopup = (props) => {
+  const navigate = useNavigate();
   const { addUser, setUser, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
@@ -33,6 +35,7 @@ const LoginPopup = (props) => {
         saveUser(user)
         props.setTrigger(false);
         setLoginError(false)
+        navigate("/main");
       })
       .catch(err => {
         console.log("error" + err)
@@ -46,6 +49,7 @@ const LoginPopup = (props) => {
         saveUser(res.data)
         props.setTrigger(false);
         setLoginError(false)
+        navigate("/main");
       })
       .catch(err => {
         console.log(err)
@@ -56,7 +60,7 @@ const LoginPopup = (props) => {
 
   const classes = useStyles()
 
-  return (props.trigger) ? (
+  return (
     <Card className={classes.popup}>
       <CardContent className={classes.innerPopup}>
         <Grid container spacing={2}>
@@ -105,7 +109,7 @@ const LoginPopup = (props) => {
         
       </CardContent>
     </Card>
-  ) : "";
+  );
 }
 
 export default LoginPopup

@@ -2,12 +2,14 @@ import * as React from 'react';
 import { AppBar, Box, Toolbar, IconButton, Typography, Container, Tooltip, MenuItem, Button, Menu} from '@material-ui/core';
 import { Menu as MenuIcon, Adb as AdbIcon } from '@material-ui/icons';
 import Avatar from '@material-ui/core/Avatar';
+import { useNavigate } from "react-router";
 
 import useStyles from "./styles"
 import { useContext } from 'react';
 import { ExpenseTrackerContext } from '../../context/context';
 
 const ResponsiveAppBar = (props) => {
+  const navigate = useNavigate();
   const classes = useStyles()
   const {settings, pages, page, setPage} = props
 
@@ -62,6 +64,7 @@ const ResponsiveAppBar = (props) => {
 
   const handleLogout = () => {
     handleCloseNavMenu()
+    navigate("/");
     logout()
   }
 

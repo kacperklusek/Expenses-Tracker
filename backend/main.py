@@ -1,9 +1,14 @@
 from datetime import datetime
+from argon2 import hash_password
 
 from bson import ObjectId
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 import uuid
 from model import Transaction, User, Category, PeriodicalTransaction, FilterModel
+
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 from database import (
     fetch_one_transaction,
@@ -22,6 +27,9 @@ from database import (
     fetch_categories,
     add_user,
     get_user,
+    hash_password,
+    fake_decode_token,
+    get_current_user
 )
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,7 +47,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+### ----------------------------------------
+@app.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await get_user(form_data.username)
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    hashed_password = await hash_password(form_data.password)
+    if not hashed_password == user.hashed_password:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
 
+    return {"access_token": user.email, "token_type": "bearer"}
+
+
+@app.get("/users/me")
+async def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+### ----------------------------------------
 
 @app.get("/api/users/{uid}/transactions/{tid}")
 async def get_transaction(uid: str, tid: str):

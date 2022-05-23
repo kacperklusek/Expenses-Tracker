@@ -2,6 +2,13 @@ import motor.motor_asyncio
 from bson import ObjectId
 from datetime import datetime, date, timedelta
 
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+
 import model
 
 user = "test-user"
@@ -41,6 +48,49 @@ INITIAL_CATEGORIES = [
      "name": "House",
      "type": "Expense"}
 ]
+
+#AUTH
+
+async def hash_password(password):
+    return "123"
+
+async def add_user(usr):
+    usr.categories = INITIAL_CATEGORIES
+    res = await collection.insert_one(dict(usr))
+    response = {
+        "user": usr,
+        "id": str(res.inserted_id)
+    }
+    return response
+
+async def get_user(email):
+    usr = await collection.find_one({"email": email})
+    if not usr:
+        raise HTTPException(status_code=400, detail="User don't exist")
+    return model.User(**usr)
+
+async def fake_decode_token(token):
+    # This doesn't provide any security at all
+    # Check the next version
+    user = get_user(token)
+    return user
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    user = fake_decode_token(token)
+    if not user:
+        raise HTTPException(status_code=400, detail="sth wrong")
+    return user
+
+# async def get_user(email):
+#     usr = await collection.find_one({"email": email})
+#     if not usr:
+#         return False
+#     usr['_id'] = str(usr.get("_id"))
+#     first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
+#     first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
+#     usr['transactions'] = first_10_tran
+#     usr['periodical_transactions'] = first_10_tran_periodical
+#     return usr
 
 
 # Regular Transactions CRUD
@@ -369,25 +419,3 @@ async def remove_category(uid, cid):
 
     res = await collection.update_one(*pipeline)
     return True if res else False
-
-
-async def add_user(usr):
-    usr.categories = INITIAL_CATEGORIES
-    res = await collection.insert_one(dict(usr))
-    response = {
-        "user": usr,
-        "id": str(res.inserted_id)
-    }
-    return response
-
-
-async def get_user(email):
-    usr = await collection.find_one({"email": email})
-    if not usr:
-        return False
-    usr['_id'] = str(usr.get("_id"))
-    first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
-    first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
-    usr['transactions'] = first_10_tran
-    usr['periodical_transactions'] = first_10_tran_periodical
-    return usr

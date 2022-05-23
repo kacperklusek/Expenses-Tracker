@@ -56,6 +56,7 @@ class User(MongoModel):
     name: str
     surname: str
     email: str
+    hashed_password: str
     categories: List[Category]
     transactions: List[Transaction]
     periodical_transactions: List[PeriodicalTransaction]
