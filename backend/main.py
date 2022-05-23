@@ -4,7 +4,7 @@ from argon2 import argon2_hash
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends
 import uuid
-from model import Transaction, User, Category, PeriodicalTransaction, FilterModel, TokenData, Token
+from model import Transaction, User, Category, PeriodicalTransaction, FilterModel, TokenData, Token, LoginModel
 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -180,8 +180,11 @@ async def create_user(usr: User):
     return response
 
 # returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
-@app.get("/api/users/{email}")
-async def login(email: str):
+@app.get("/api/users")
+async def login(loginModel: LoginModel):
+    email = loginModel.email
+    password = loginModel.password
+
     usr = await get_user(email)
     if usr:
         return usr

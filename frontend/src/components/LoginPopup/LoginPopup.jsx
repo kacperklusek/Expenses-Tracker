@@ -25,7 +25,11 @@ const LoginPopup = (props) => {
         periodical_transactions: [],
         balance: 0.0
       }
-      axios.post(url + "/api/users", user)
+      let userToRegister = {
+        user: user,
+        password: formData.password
+      }
+      axios.post(url + "/api/users", userToRegister)
       .then(res => {
         console.log(res.data.user)
         user = res.data.user
@@ -42,7 +46,11 @@ const LoginPopup = (props) => {
         setLoginError(true)    
       })
     } else {
-      axios.get(url + "/api/users/" + formData.email)
+      let userToLogin = {
+        email: formData.email,
+        password: formData.password
+      }
+      axios.get(url + "/api/users", userToLogin)
       .then(res => {
         res.data.id = res.data._id
         setUser(res.data)
