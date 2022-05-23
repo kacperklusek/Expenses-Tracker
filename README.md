@@ -470,7 +470,7 @@ async def get_user(email):
 
 Komunikacja z serwerem jest zaimplementowana w pliku main.py
 
-### Triggery
+### 4. Triggery
 
 Do dodawania nowych transakcji na podstawie periodical_transaction, dochodzi za pomocą triggera umieszczonego w serwisie Mongo Atlas. Trigger ten jest uruchamiany raz dziennie o danej godzinie, następnie dla każdego użytkownika pobiera on jego periodical transactions i sprawdza czy powinien on dodać nową transakcje dla danego użytkownika. Trigger pobiera tylko te transakcje, których final date jest większe niż aktualna data lub jest nullem.
 
@@ -548,3 +548,37 @@ exports = async function() {
   })
 };
 ```
+### 5. Główny widok aplikacji - Widok EXPENSES
+
+Główny widok aplikacji składa się z menu nawigującego, formsa służącego do dodawania transakcji, listy transakcji oraz wykresu prezentującego albo wydatki albo dochody danego użytkownika, w zależności od tego co chcemy w danej chwili oglądać. Dodając transakcję możemy wybrać kategorie z listy juz istniejących, albo dodać nową.
+
+![image](https://user-images.githubusercontent.com/75839071/169917428-2f97b9d6-6702-4ac3-8db1-6c0053b3c541.png)
+
+
+### 6. Widok - CATEGORIES
+
+W tym widoku użytkownik ma podgląd na wszystkie swoje kategorie podzielone na kategorie związane z wydatkami i kategorie związane z dochodami. W tym miejscu możemy przeglądać kategorie oraz je usuwać.
+
+![image](https://user-images.githubusercontent.com/75839071/169917551-f2f4aee6-b88c-4a27-920c-de140c844ffe.png)
+
+### 7. Widok - HISTORY
+
+Widok history umożliwia użytkownikowi wyszukiwanie transakcji w bazie danych. Udostępnione zostały 4 kryteria filtrowania: typ (expense, income), kategoria, kwota oraz data.
+
+![image](https://user-images.githubusercontent.com/75839071/169917646-89be8572-aa16-4e36-a54c-674d02685b65.png)
+
+### 8. Widok - BALANCE
+
+W tym widoku wyświetlany jest aktualny balans użytkownika, czyli po prostu różnica między dochodami, a wydatkami. W tym miejscu możemy również obliczyć spodziewnay balans w przyszłości, który obliczany jest na podstawie już wykonanych transakcji oraz symulacji transakcji okresowych.
+
+![image](https://user-images.githubusercontent.com/75839071/169917844-008268c3-cc9e-44e7-a709-4c21bbf54ea1.png)
+
+
+### 9. Widok - LOGOWANIE
+
+Na początku uruchamiania aplikacji pojawia się ekran do logowania, gdzie możemy się zalogować lub zarejestrować nowego użytkownika.
+
+![image](https://user-images.githubusercontent.com/75839071/169917177-88955457-a545-4e99-9112-4575988e99c9.png)
+
+![image](https://user-images.githubusercontent.com/75839071/169917277-563b9b47-eb3c-416b-bfb3-a090ab8f96f1.png)
+
