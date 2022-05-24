@@ -1,8 +1,5 @@
 import axios from "axios";
 import { saveUser, clearUser } from "./context";
-import { transitions } from '@material-ui/core/styles/transitions';
-
-// state is our transactions list
 
 export const url = "http://localhost:8000"
 
