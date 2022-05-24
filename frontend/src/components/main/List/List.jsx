@@ -54,7 +54,7 @@ const List = () => {
             primary={transaction.category.name} 
             secondary={`$${transaction.amount} - ${new Date(transaction.date).toDateString()}`}/>
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label='delete' onClick={() => deleteTransaction(transaction.id)}>
+              <IconButton edge="end" aria-label='delete' onClick={() => deleteTransaction(transaction)}>
                 <Delete />
               </IconButton>
             </ListItemSecondaryAction>

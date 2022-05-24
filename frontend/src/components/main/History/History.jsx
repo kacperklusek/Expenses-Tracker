@@ -193,7 +193,7 @@ const History = () => {
               secondary={`$${transaction.amount} - ${new Date(transaction.date).toDateString()}`}/>
               <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label='delete' onClick={() => {
-                  deleteTransaction(transaction.id)
+                  deleteTransaction(transaction)
                   setTranasactions(transactions.filter(t => t.id !== transaction.id))
                   }}>
                   <Delete />

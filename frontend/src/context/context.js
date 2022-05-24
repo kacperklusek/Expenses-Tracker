@@ -39,7 +39,7 @@ export const Provider = ({ children }) => {
   }, [])
 
   // Action Creators
-  const deleteTransaction = (id) => dispatch({ type: "DELETE_TRANSACTION", payload: id })
+  const deleteTransaction = (tran) => dispatch({ type: "DELETE_TRANSACTION", payload: tran })
   const deletePeriodicalTransaction = (id) => dispatch({ type: "DELETE_PERIODICAL_TRANSACTION", payload: id })
   const addTransaction = (transaction) => dispatch({ type: "ADD_TRANSACTION", payload: transaction })
   const addPeriodicalTransaction = (transaction) => dispatch({ type: "ADD_PERIODICAL_TRANSACTION", payload: transaction })

@@ -19,10 +19,10 @@ const contextReducer = (state, action) => {
     case "DELETE_TRANSACTION":
       console.log("deleting..."+action.payload);
       user = {...state}
-      user.transactions = user.transactions.filter((t) => t.id !== action.payload);
-      user.balance += action.payload.category.type == "Income" ? action.payload.amount : -action.payload.amount
+      user.transactions = user.transactions.filter((t) => t.id !== action.payload.id);
+      user.balance -= action.payload.category.type == "Income" ? action.payload.amount : -action.payload.amount
 
-      axios.delete(url + `/api/users/${user.id}/transactions/${action.payload}`)
+      axios.delete(url + `/api/users/${user.id}/transactions/${action.payload.id}`)
         .then(res => {
           console.log("succesfully deleted transaction");
         })
