@@ -9,13 +9,12 @@ Chart.register(ArcElement, Legend);
 
 const Details = ({title}) => {
   const classes = useStyles()
-  const { total, chartData } = useTransactions(title)
-
+  const { total, chartData, have, balance } = useTransactions(title)
+  const display = title  + ": $" + total + " from " + have + " transactions"
   return (
-    <Card className={title === "Income" ? classes.income : classes.expense}>
-      <CardHeader title={title} />
+    <Card className={title === "Income" ? classes.income: classes.expense} >
+      <CardHeader title={display}/>
       <CardContent variant="h5">
-        <Typography>${total}</Typography>
         <Doughnut data={chartData} />
       </CardContent>
     </Card>

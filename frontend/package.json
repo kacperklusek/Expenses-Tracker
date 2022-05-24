@@ -15,6 +15,7 @@
     "chart.js": "^3.7.1",
     "cookies": "^0.8.0",
     "js-cookie": "^3.0.1",
+    "js-cookies": "^1.0.4",
     "react": "^16.13.1",
     "react-chartjs-2": "^4.0.1",
     "react-cookie": "^4.1.1",

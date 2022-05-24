@@ -8,16 +8,17 @@ const useTransactions = (title) => {
   const transactionsPerType = user.transactions.filter((t) => t.category.type === title)
   // code below just sums all elements
   const total = transactionsPerType.reduce((acc, currVal) => acc += currVal.amount, 0)
+  var TransactionCounter = 0
   let categories = user.transactions.filter(t => t.category.type == title).map(t => t.category)
   categories = [...new Set(categories)]
 
   categories.forEach(c => c.amount = 0)
   transactionsPerType.forEach((t) => {
     const category = categories.find((c) => c.name === t.category.name)
-
+    TransactionCounter += 1
     if (category) category.amount += t.amount
   });
-
+  
   const filteredCategories = categories.filter((c) => c.amount > 0)
 
   const chartData = {
@@ -34,7 +35,10 @@ const useTransactions = (title) => {
     }]
   }
 
-  return { total, chartData }
+  const have = TransactionCounter
+  const balance = user.balance
+
+  return { total, chartData, have, balance }
 }
 
 export default useTransactions
