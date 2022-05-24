@@ -17,10 +17,11 @@ Struktura dokumentu w kolekcji users:
         _id: id,
         name: string,
         surname: string,
+        hashed_password: string | null,
         email: string,
         categories: [
             {
-                id: id,
+                id: string,
                 name: string,
                 type: string
             },
@@ -28,7 +29,7 @@ Struktura dokumentu w kolekcji users:
         ],
         transactions: [
             {
-                id: id,
+                id: string,
                 category: {
                     id: id,
                     name: string,
@@ -41,7 +42,7 @@ Struktura dokumentu w kolekcji users:
         ],
         periodical_transaction: [
             {
-                _id: id,
+                id: string,
                 category: {
                     id: id,
                     name: string,
@@ -111,27 +112,20 @@ class User(MongoModel):
     name: str
     surname: str
     email: str
+    hashed_password: str | None
     categories: List[Category]
     transactions: List[Transaction]
     periodical_transactions: List[PeriodicalTransaction]
     balance: float
-
-
-class FilterModel(MongoModel):
-    from_date: datetime
-    to_date: datetime
-    from_amount: int
-    to_amount: int
-    categories: List[Category]
 ```
 
-Klasa FilterModel służy do przesyłania ustawień filtrowania transakcji.
+Poza powyższymi klasami w pliku ```model.py``` znajdują się dodatkowe modele niezbędne do przetwarzania zapytań do serwera.
 
 ### 3. Operacje na bazie danych
 
-Na naszej bazie danych wykonujemy następujące operacje:
+Serwer umożliwia wykonywanie następujących operacji na bazie danych:
 
-Pobranie dla użytkownika kilku transakcji naraz:
+Pobranie dla użytkownika określonej liczby transakcji naraz:
 
 ```python
 async def fetch_n_transactions(uid, have, n):
@@ -182,7 +176,7 @@ async def fetch_transactions_by_dates(uid, from_date, to_date):
     return transactions
 ```
 
-Pobranie transakcji według danego filtra:
+Pobranie transakcji według danego filtra (kategoria, data, wartość transakcji):
 
 ```python
 async def fetch_filtered_transactions(uid, categories, from_date, to_date, from_amount, to_amount):
@@ -213,7 +207,6 @@ async def fetch_filtered_transactions(uid, categories, from_date, to_date, from_
     async for doc in cursor:
         transactions.append(doc)
 
-    print(transactions)
     return transactions
 ```
 
@@ -274,7 +267,7 @@ async def update_balance(uid, amount, tran_type):
         return False
 ```
 
-Pobranie kilku wydatków okresowych:
+Pobranie określonej liczby najnowszych wydatków okresowych:
 
 ```python
 async def fetch_n_periodical_transactions(uid, have, n):
@@ -398,7 +391,7 @@ async def predict_balance(uid, end_date):
     return difference
 ```
 
-Pobranie, dodanie, usunięcie kategori:
+Pobranie, dodanie, usunięcie kategori użytkownika:
 
 ```python
 async def fetch_categories(uid):
@@ -443,36 +436,17 @@ async def remove_category(uid, cid):
     return True if res else False
 ```
 
-Dodanie oraz zwrócenie użytkownika:
-
-```python
-async def add_user(usr):
-    usr.categories = INITIAL_CATEGORIES
-    res = await collection.insert_one(dict(usr))
-    response = {
-        "user": usr,
-        "id": str(res.inserted_id)
-    }
-    return response
+Rejestracja nowego użytkownika oraz logowanie. Proces rejestracji i logowania jest skomplikowany i rozbity na kilka funkcji oraz plików, dlatego w celu analizy implementacji lepiej zajrzeć do pliku ```main.py``` i przeanalizować endpointy:
+ * ```/token``` - zwraca token do logowoania
+ * ```/users/me``` - zwraca użytkownika na podstawie tokena
+ * ```/api/users``` - rejestruje nowego użytkownika
 
 
-async def get_user(email):
-    usr = await collection.find_one({"email": email})
-    if not usr:
-        return False
-    usr['_id'] = str(usr.get("_id"))
-    first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
-    first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
-    usr['transactions'] = first_10_tran
-    usr['periodical_transactions'] = first_10_tran_periodical
-    return usr
-```
-
-Komunikacja z serwerem jest zaimplementowana w pliku main.py
+Komunikacja z serwerem jest zaimplementowana w pliku ```main.py```
 
 ### 4. Triggery
 
-Do dodawania nowych transakcji na podstawie periodical_transaction, dochodzi za pomocą triggera umieszczonego w serwisie Mongo Atlas. Trigger ten jest uruchamiany raz dziennie o danej godzinie, następnie dla każdego użytkownika pobiera on jego periodical transactions i sprawdza czy powinien on dodać nową transakcje dla danego użytkownika. Trigger pobiera tylko te transakcje, których final date jest większe niż aktualna data lub jest nullem.
+Do dodawania nowych transakcji na podstawie periodical_transaction, dochodzi za pomocą triggera (Scheduled Trigger) działającego w serwisie Mongo Atlas. Trigger ten jest uruchamiany raz dziennie o danej godzinie (01:00). Dla każdego użytkownika wybiera aktywne w tym momencie transakcje okresowe i sprawdza czy powinien on dodać nową transakcje dla każdej z ww. transakcji.
 
 ```javascript
 exports = async function() {
@@ -548,6 +522,7 @@ exports = async function() {
   })
 };
 ```
+
 ### 5. Główny widok aplikacji - Widok EXPENSES
 
 Główny widok aplikacji składa się z menu nawigującego, formsa służącego do dodawania transakcji, listy transakcji oraz wykresu prezentującego albo wydatki albo dochody danego użytkownika, w zależności od tego co chcemy w danej chwili oglądać. Dodając transakcję możemy wybrać kategorie z listy juz istniejących, albo dodać nową.
