@@ -76,6 +76,17 @@ async def create_user(usr: UserToRegister):
     response = await add_user(usr)
     return response
 
+# returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
+@app.get("/api/users")
+async def login(model: LoginModel):
+    email = model.email
+    print(email)
+    password = model.password
+
+    usr = await get_user(email)
+    if usr:
+        return usr
+    raise HTTPException(400, "Error fetching user, probably no user with given email")
 
 ### ----------------------------------------
 
@@ -181,18 +192,6 @@ async def delete_category(uid: str, cid: str):
 async def get_categories(uid: str):
     response = await fetch_categories(uid)
     return response
-
-# returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
-@app.get("/api/users")
-async def login(model: LoginModel):
-    print('dupa')
-    email = model.email
-    password = model.password
-
-    usr = await get_user(email)
-    if usr:
-        return usr
-    raise HTTPException(400, "Error fetching user, probably no user with given email")
 
 
 from database import update_balance
