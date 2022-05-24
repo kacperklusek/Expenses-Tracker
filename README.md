@@ -3,11 +3,17 @@
 
 ### 1. Opis Projektu
 
-Naszym celem było stworzenie aplikacji webowej do zarządzania budżetem. Aplikacja pozwala na kategoryzacje wydatków i przychodów, wyświetlanie graficznej reprezentacji wydatków i przychodów, dodawanie cyklicznych wydatków lub przychodów oraz przewidywanie przyszłego stanu budżetu.
+Naszym celem było stworzenie aplikacji webowej do zarządzania budżetem. Aplikacja pozwala na kategoryzacje wydatków i przychodów, wyświetlanie graficznej reprezentacji zawieranych transakcji, dodawanie cyklicznych płatności oraz przewidywanie przyszłego stanu budżetu.
 
-Wybraną przez nas bazą danych było MongoDB. Aby zrealizować front-end aplikacji użyliśmy frameworka: React, natomiast do zrealizowania back-end użyliśmy FastApi.
 
-### 2. Baza Danych
+### 2. Stos technologiczny
+
+* Baza danych: MongoDB
+* Frontend: ReactJS
+* Backend: FastApi
+
+
+### 3. Baza Danych
 
 Baza danych składa się z kolekcji users, która przechowuje informacje o użytkownikach oraz dodanych przez nich transakcjach i kategoriach.
 Struktura dokumentu w kolekcji users:
@@ -523,33 +529,34 @@ exports = async function() {
 };
 ```
 
-### 5. Główny widok aplikacji - Widok EXPENSES
+### 5. Widoki aplikacji 
+*  EXPENSES
 
 Główny widok aplikacji składa się z menu nawigującego, formsa służącego do dodawania transakcji, listy transakcji oraz wykresu prezentującego albo wydatki albo dochody danego użytkownika, w zależności od tego co chcemy w danej chwili oglądać. Dodając transakcję możemy wybrać kategorie z listy juz istniejących, albo dodać nową.
 
 ![image](https://user-images.githubusercontent.com/75839071/169917428-2f97b9d6-6702-4ac3-8db1-6c0053b3c541.png)
 
 
-### 6. Widok - CATEGORIES
+* CATEGORIES
 
 W tym widoku użytkownik ma podgląd na wszystkie swoje kategorie podzielone na kategorie związane z wydatkami i kategorie związane z dochodami. W tym miejscu możemy przeglądać kategorie oraz je usuwać.
 
 ![image](https://user-images.githubusercontent.com/75839071/169917551-f2f4aee6-b88c-4a27-920c-de140c844ffe.png)
 
-### 7. Widok - HISTORY
+* HISTORY
 
 Widok history umożliwia użytkownikowi wyszukiwanie transakcji w bazie danych. Udostępnione zostały 4 kryteria filtrowania: typ (expense, income), kategoria, kwota oraz data.
 
 ![image](https://user-images.githubusercontent.com/75839071/169917646-89be8572-aa16-4e36-a54c-674d02685b65.png)
 
-### 8. Widok - BALANCE
+* BALANCE
 
 W tym widoku wyświetlany jest aktualny balans użytkownika, czyli po prostu różnica między dochodami, a wydatkami. W tym miejscu możemy również obliczyć spodziewnay balans w przyszłości, który obliczany jest na podstawie już wykonanych transakcji oraz symulacji transakcji okresowych.
 
 ![image](https://user-images.githubusercontent.com/75839071/169917844-008268c3-cc9e-44e7-a709-4c21bbf54ea1.png)
 
 
-### 9. Widok - LOGOWANIE
+* LOGOWANIE
 
 Na początku uruchamiania aplikacji pojawia się ekran do logowania, gdzie możemy się zalogować lub zarejestrować nowego użytkownika.
 
