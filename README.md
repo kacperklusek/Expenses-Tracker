@@ -539,26 +539,25 @@ exports = async function() {
 
 Główny widok aplikacji składa się z menu nawigującego, formsa służącego do dodawania transakcji, listy transakcji oraz wykresu prezentującego albo wydatki albo dochody danego użytkownika, w zależności od tego co chcemy w danej chwili oglądać. Dodając transakcję możemy wybrać kategorie z listy juz istniejących, albo dodać nową.
 
-![image](https://user-images.githubusercontent.com/75839071/169917428-2f97b9d6-6702-4ac3-8db1-6c0053b3c541.png)
-
+![image](https://user-images.githubusercontent.com/75839071/170133838-f59cb93c-a2c9-4396-882d-200c245abba5.png)
 
 * CATEGORIES
 
 W tym widoku użytkownik ma podgląd na wszystkie swoje kategorie podzielone na kategorie związane z wydatkami i kategorie związane z dochodami. W tym miejscu możemy przeglądać kategorie oraz je usuwać.
 
-![image](https://user-images.githubusercontent.com/75839071/169917551-f2f4aee6-b88c-4a27-920c-de140c844ffe.png)
+![image](https://user-images.githubusercontent.com/75839071/170133935-6fca7ed4-bf98-41c5-b072-d41e60c81299.png)
 
 * HISTORY
 
 Widok history umożliwia użytkownikowi wyszukiwanie transakcji w bazie danych. Udostępnione zostały 4 kryteria filtrowania: typ (expense, income), kategoria, kwota oraz data.
 
-![image](https://user-images.githubusercontent.com/75839071/169917646-89be8572-aa16-4e36-a54c-674d02685b65.png)
+![image](https://user-images.githubusercontent.com/75839071/170134024-f5e7cf23-0786-44c9-beb3-db3bcf51a078.png)
 
 * BALANCE
 
 W tym widoku wyświetlany jest aktualny balans użytkownika, czyli po prostu różnica między dochodami, a wydatkami. W tym miejscu możemy również obliczyć spodziewnay balans w przyszłości, który obliczany jest na podstawie już wykonanych transakcji oraz symulacji transakcji okresowych.
 
-![image](https://user-images.githubusercontent.com/75839071/169917844-008268c3-cc9e-44e7-a709-4c21bbf54ea1.png)
+![image](https://user-images.githubusercontent.com/75839071/170134195-6b5517f3-9805-4c8e-b59a-98c27d947c06.png)
 
 
 * LOGOWANIE
