@@ -568,3 +568,102 @@ Na początku uruchamiania aplikacji pojawia się ekran do logowania, gdzie może
 
 ![image](https://user-images.githubusercontent.com/75839071/169917277-563b9b47-eb3c-416b-bfb3-a090ab8f96f1.png)
 
+### 6. Autentykacja użytkownika
+
+Autentykacja została zrobiona zgodnie z specyfikacją OAuth 2.0.
+
+W bazie danych przechowujemy zahashowane hasło użytkownika, następnie gdy użytkownik próbuję się zalgować sprawdzamy czy hash hasła wpisanego przez użytkownika jest identyczny z tym w bazie danych. Jeśli tak to zwracamy mu token uwierzytelniający, za pomocą którego aplikacja weryfikuje użytkownika. Token jest aktywny przez 30 minut lub do momentu wyłączenia sesji przeglądarki.
+
+Tak wyglądają funkcję, które obsługują autentykacje po stronie backendu:
+
+```python
+async def verify_password(plain_password, hashed_password):
+    print("context: ", pwd_context)
+    print("context.verify: ", pwd_context.verify)
+    print("verify: ", pwd_context.verify(plain_password, hashed_password))
+    return pwd_context.verify(plain_password, hashed_password)
+
+async def hash_password(password):
+    return pwd_context.hash(password)
+
+async def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def authenticate_user(email: str, password: str):
+    user = await get_user(email)
+    if not user:
+        return False
+    if not await verify_password(password, user['hashed_password']):
+        return False
+    return user
+
+async def add_user(usr):
+    password = usr.password
+    usr = usr.user
+    usr.hashed_password = await hash_password(password)
+    usr.categories = INITIAL_CATEGORIES
+    res = await collection.insert_one(dict(usr))
+    response = {
+        "user": usr,
+        "id": str(res.inserted_id)
+    }
+    return response
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=400, detail="ERROR")
+        token_data = TokenData(username=username)
+    except JWTError:
+        raise HTTPException(status_code=400, detail="ERROR")
+    user = await get_user(token_data.username)
+    if user is None:
+        raise HTTPException(status_code=400, detail="ERROR")
+    return user
+```
+
+tak natomiast wyglądają restpointy:
+
+```python
+@app.post("/token", response_model=Token)
+async def login_for_access_token(form_data: LoginModel):
+    user = await authenticate_user(form_data.email, form_data.password)
+    if not user:
+        raise HTTPException(status_code=400, detail="wywalilo sie")
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = await create_access_token(
+        data={"sub": user['email']}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@app.get("/users/me")
+async def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@app.post("/api/users")
+async def create_user(usr: UserToRegister):
+    response = await add_user(usr)
+    return response
+
+# returns _id of user with given email (id is string, and should be fetched from mongo using ObjectId(id))
+@app.get("/api/users")
+async def login(model: LoginModel):
+    email = model.email
+    print(email)
+    password = model.password
+
+    usr = await get_user(email)
+    if usr:
+        return usr
+    raise HTTPException(400, "Error fetching user, probably no user with given email")
+```

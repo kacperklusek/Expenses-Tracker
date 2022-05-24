@@ -98,18 +98,6 @@ async def add_user(usr):
     }
     return response
 
-async def get_user(email):
-    usr = await collection.find_one({"email": email})
-    if not usr:
-        raise HTTPException(status_code=400, detail="User don't exist")
-    usr['_id'] = str(usr.get("_id"))
-    usr['hashed_password'] = str(usr.get("hashed_password"))
-    first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
-    first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
-    usr['transactions'] = first_10_tran
-    usr['periodical_transactions'] = first_10_tran_periodical
-    return usr
-
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -123,6 +111,18 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise HTTPException(status_code=400, detail="ERROR")
     return user
+
+async def get_user(email):
+    usr = await collection.find_one({"email": email})
+    if not usr:
+        raise HTTPException(status_code=400, detail="User don't exist")
+    usr['_id'] = str(usr.get("_id"))
+    usr['hashed_password'] = str(usr.get("hashed_password"))
+    first_10_tran = await fetch_n_transactions(usr.get("_id"), 0, 10)
+    first_10_tran_periodical = await fetch_n_periodical_transactions(usr.get("_id"), 0, 10)
+    usr['transactions'] = first_10_tran
+    usr['periodical_transactions'] = first_10_tran_periodical
+    return usr
 
 
 # Regular Transactions CRUD
