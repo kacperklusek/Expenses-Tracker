@@ -10,7 +10,18 @@ Chart.register(ArcElement, Legend);
 const Details = ({title}) => {
   const classes = useStyles()
   const { total, chartData, have, balance } = useTransactions(title)
-  const display = title  + ": $" + total + " from " + have + " transactions"
+  var dis
+  if (have == 0) {
+    dis = title
+  }
+  if (have == 1) {
+    dis = title  + ": $" + total + " from " + have + " transaction"
+  }
+  if (have > 1) {
+    dis = title  + ": $" + total + " from " + have + " transactions"
+  }
+  const display = dis
+  
   return (
     <Card className={title === "Income" ? classes.income: classes.expense} >
       <CardHeader title={display}/>
