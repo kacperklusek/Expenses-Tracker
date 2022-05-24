@@ -7,13 +7,34 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import Cookies from "js-cookie"
 
-const LoginPopup = (props) => {
+const LoginPopup = () => {
   const navigate = useNavigate();
   const { addUser, setUser, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
   const [loginError, setLoginError] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  if (Cookies.get("token")) {
+    console.log(Cookies.get("token"))
+    const headers = {
+      Authorization: `Bearer ${Cookies.get("token")}`
+    }
+    axios.get(url + "/users/me", {headers})
+        .then(res => {
+          setLoading(false)
+          res.data.id = res.data._id
+          setUser(res.data)
+          saveUser(res.data)
+          setLoginError(false)
+          navigate('/main')
+        })
+        .catch(err => {
+          setLoading(false)
+          console.log(err)
+          setLoginError(true)
+        })
+  }
 
   const submitHandler = async e => {
     if (register) {
@@ -40,7 +61,6 @@ const LoginPopup = (props) => {
         user.id = id
         setUser(user)
         saveUser(user)
-        props.setTrigger(false);
         setLoginError(false)
         navigate("/main");
       })
@@ -67,7 +87,6 @@ const LoginPopup = (props) => {
           res.data.id = res.data._id
           setUser(res.data)
           saveUser(res.data)
-          props.setTrigger(false)
           setLoginError(false)
           navigate('/main')
         })

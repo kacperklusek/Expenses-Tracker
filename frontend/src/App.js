@@ -34,7 +34,7 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element = {<LoginPopup trigger={buttonPopup} setTrigger={setButtonPopup}/>}/>
+        <Route path="/" element = {<LoginPopup/>}/>
         <Route path="/main" element = {
             <div>
             <ResponsiveAppBar page={page} setPage={setPage} pages={pages}/>

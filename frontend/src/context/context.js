@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useReducer, createContext, useEffect } from "react";
 
 import contextReducer from './contextReducer'
@@ -11,6 +12,9 @@ export const saveUser = (user) => {
 export const clearUser = (user) => {
   if (sessionStorage.getItem("user")){
     sessionStorage.removeItem('user')
+  }
+  if (Cookies.get('token') != null) {
+    Cookies.remove('token')
   }
 }
 
