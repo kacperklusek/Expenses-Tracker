@@ -12,8 +12,13 @@ Naszym celem było stworzenie aplikacji webowej do zarządzania budżetem. Aplik
 * Frontend: ReactJS
 * Backend: FastApi
 
+### 3 Deployment:
+* Frontend: Netlify
+* Banckend: Heroku
+ Strona dostępna **[tutaj](https://expenses-tracker-ns.netlify.app/)**
 
-### 3. Baza Danych
+
+### 4. Baza Danych
 
 Baza danych składa się z kolekcji users, która przechowuje informacje o użytkownikach oraz dodanych przez nich transakcjach i kategoriach.
 Struktura dokumentu w kolekcji users:
