@@ -40,7 +40,11 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    # TODO: add deployment address if deployed
+    "http://192.168.55.103:3000/",
+    "https://git.heroku.com/budget-app-ns.git",
+    "https://budget-app-ns.herokuapp.com/",
+    "https://tendies-tracker.netlify.app/",
+    "*"
 ]
 
 app.add_middleware(

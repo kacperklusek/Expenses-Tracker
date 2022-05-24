@@ -1,7 +1,7 @@
 import axios from "axios";
 import { saveUser, clearUser } from "./context";
 
-export const url = "http://localhost:8000"
+export const url = "https://budget-app-ns.herokuapp.com"
 
 
 const contextReducer = (state, action) => {

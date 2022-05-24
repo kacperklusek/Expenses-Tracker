@@ -1,6 +1,7 @@
 import React, { useReducer, createContext, useEffect } from "react";
 
 import contextReducer from './contextReducer'
+import { url as URL } from "./contextReducer";
 
 export const saveUser = (user) => {
   user = JSON.stringify(user)
@@ -52,7 +53,7 @@ export const Provider = ({ children }) => {
   const getUser = (loginData) => dispatch({type: "LOGIN", payload: loginData})
   const logout = () => dispatch({type: "LOGOUT"})
   const setUser = (newUser) => dispatch({type: "SET_USER", payload:newUser})
-  const url = "http://localhost:8000"
+  const url = URL
 
 
   return (

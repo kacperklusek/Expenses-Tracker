@@ -78,8 +78,8 @@ async def create_access_token(data: dict, expires_delta: Union[timedelta, None] 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def authenticate_user(username: str, password: str):
-    user = await get_user(username)
+async def authenticate_user(email: str, password: str):
+    user = await get_user(email)
     if not user:
         return False
     if not await verify_password(password, user['hashed_password']):
@@ -115,13 +115,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise HTTPException(status_code=400, detail="wywalilo sie")
+            raise HTTPException(status_code=400, detail="ERROR")
         token_data = TokenData(username=username)
     except JWTError:
-        raise HTTPException(status_code=400, detail="wywalilo sie")
+        raise HTTPException(status_code=400, detail="ERROR")
     user = await get_user(token_data.username)
     if user is None:
-        raise HTTPException(status_code=400, detail="wywalilo sie")
+        raise HTTPException(status_code=400, detail="ERROR")
     return user
 
 
