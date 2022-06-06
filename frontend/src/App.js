@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Grid } from '@material-ui/core'
-import { PushToTalkButton, PushToTalkButtonContainer, ErrorPanel } from '@speechly/react-ui'
 import { SpeechState, useSpeechContext } from '@speechly/react-client'
 import { Routes, Route } from "react-router-dom";
 
@@ -9,7 +8,6 @@ import Main from './components/main/Main'
 import useStyles from "./styles"
 import LoginPopup from "./components/LoginPopup/LoginPopup"
 import ResponsiveAppBar from './components/Header/Header';
-import { ExpenseTrackerContext } from './context/context';
 
 const pages = ["Expenses", "Categories", "History", "Balance"];
 
@@ -40,17 +38,14 @@ const App = () => {
               <Grid ref={main} item xs={11} md={6} style={{ 'minWidth': '325px' }} >
                 <Main page={page}/>
               </Grid>
-              <Grid item xs={11} md={4}>
-                <DetailWrapper/>
+              <Grid item xs={11} md={4} className={classes.space_bottom}>
+                <DetailWrapper />
               </Grid>
             </Grid>
             </div>
         }/>
       </Routes>
-      <PushToTalkButtonContainer>
-        <PushToTalkButton/>
-        <ErrorPanel/>
-      </PushToTalkButtonContainer>
+    
     </div>
   )
 }

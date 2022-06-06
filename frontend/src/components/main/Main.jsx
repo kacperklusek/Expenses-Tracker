@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Tabs, Tab } from '@material-ui/core'
+import { PushToTalkButton, PushToTalkButtonContainer, ErrorPanel } from '@speechly/react-ui'
+
 
 import useStyles from "./styles"
 import Forms from './Forms/Forms'
@@ -26,10 +28,17 @@ const Main = (props) => {
  
 
   return (
-    <Card className={classes.root}>
+    <div>
+       <Card className={classes.root}>
       {renderSwitch()}
 
-    </Card >
+      </Card >   
+      <PushToTalkButtonContainer>
+        <PushToTalkButton/>
+        <ErrorPanel/>
+      </PushToTalkButtonContainer>
+    </div>
+
   )
 }
 

@@ -59,18 +59,14 @@ const Form = () => {
       }
 
       segment.entities.forEach((e) => {
-        const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+        const category_name = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+        console.log("cat name:" + category_name)
         switch (e.type) {
           case 'amount':
             setFormData({ ...formData, amount: e.value })
             break;
           case 'category':
-            if (user.categories.filter(c => c.type === "Income").map((c) => c.type).includes(category)) {
-              setFormData({ ...formData, category, type: "Income" })
-            } else 
-            if (user.categories.filter(c => c.type === "Expense").map((c) => c.type).includes(category)) {
-              setFormData({ ...formData, category, type: "Expense" })
-            }
+            setFormData({ ...formData, category: user.categories.find(c => c.name === category_name) })
             break
           case 'date':
             setFormData({ ...formData, date: e.value })
@@ -80,7 +76,7 @@ const Form = () => {
         }
       })
 
-      if (segment.isFinal && formData.amount && formData.category && formData.type && formData.date) {
+      if (segment.isFinal && formData.amount > 0 && formData.category !== {} && formData.type && formData.date) {
         return createTransaction();
       }
     }

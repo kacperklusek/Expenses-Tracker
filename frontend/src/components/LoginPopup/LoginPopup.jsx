@@ -151,7 +151,7 @@ const LoginPopup = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <Button className={classes.button} variant="outlined" color="primary" fullWidth onClick={submitHandler}>
+            <Button  disabled={loading} className={classes.button} variant="outlined" color="primary" fullWidth onClick={submitHandler}>
               {register ? 'create account' : 'login'}
             </Button>
           </Grid>
