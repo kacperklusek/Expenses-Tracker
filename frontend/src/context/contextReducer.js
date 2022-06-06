@@ -160,7 +160,6 @@ const contextReducer = (state, action) => {
         })
         saveUser(user)
         return user
-
     case "ADD_USER":
       user = {...state}
       axios.post(url + "/api/users", action.payload)
@@ -175,22 +174,6 @@ const contextReducer = (state, action) => {
         .catch(err => {
           console.log("error" + err)
           return state        
-        })
-      return user
-    case "LOGIN":
-      user = {...state}
-      // TODO now login is based only on email, change that
-      axios.get(url + "/api/users/" + action.payload.email)
-        .then(res => {
-          user = {...res.data}
-          user.id = res.data._id
-          console.log(user)
-          saveUser(user)
-          return user
-        })
-        .catch(err => {
-          console.log(err)
-          return state
         })
       return user
     case "LOGOUT":

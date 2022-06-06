@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { TextField, Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
 import { ExpenseTrackerContext } from '../../../../context/context'
 import { v4 as uuidv4 } from "uuid"
@@ -37,7 +37,6 @@ const Form = () => {
     setOpen(true)
     console.log(transaction)
     addTransaction(transaction)
-    // setFormData(initialState)
   }
 
   const handleClickOpen = () => {
@@ -47,48 +46,47 @@ const Form = () => {
   const compare = (a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0)
 
 
-  // useEffect(() => {
-  //   if (segment) {
-  //     if (segment.intent.intent === 'add_expense') {
-  //       setFormData({ ...formData, type: 'Expense' })
-  //     } else if (segment.intent.intent === "add_income") {
-  //       setFormData({ ...formData, type: "Income" })
-  //     } else if (segment.isFinal && segment.intent.intent === "create_transaction") {
-  //       return createTransaction();
-  //     } else if (segment.isFinal && segment.intent.intent === "cancel_transaction") {
-  //       return setFormData(initialState)
-  //     }
+  useEffect(() => {
+    if (segment) {
+      if (segment.intent.intent === 'add_expense') {
+        setFormData({ ...formData, type: 'Expense' })
+      } else if (segment.intent.intent === "add_income") {
+        setFormData({ ...formData, type: "Income" })
+      } else if (segment.isFinal && segment.intent.intent === "create_transaction") {
+        return createTransaction();
+      } else if (segment.isFinal && segment.intent.intent === "cancel_transaction") {
+        return setFormData(initialState)
+      }
 
-  //     segment.entities.forEach((e) => {
-  //       const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
-  //       switch (e.type) {
-  //         case 'amount':
-  //           setFormData({ ...formData, amount: e.value })
-  //           break;
-  //         case 'category':
-  //           if (incomeCategories.map((c) => c.type).includes(category)) {
-  //             setFormData({ ...formData, category, type: "Income" })
-  //           } else if (expenseCategories.map((c) => c.type).includes(category)) {
-  //             setFormData({ ...formData, category, type: "Expense" })
-  //           }
-  //           break
-  //         case 'date':
-  //           setFormData({ ...formData, date: e.value })
-  //           break
-  //         default:
-  //           break;
-  //       }
-  //     })
+      segment.entities.forEach((e) => {
+        const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`
+        switch (e.type) {
+          case 'amount':
+            setFormData({ ...formData, amount: e.value })
+            break;
+          case 'category':
+            if (user.categories.filter(c => c.type === "Income").map((c) => c.type).includes(category)) {
+              setFormData({ ...formData, category, type: "Income" })
+            } else 
+            if (user.categories.filter(c => c.type === "Expense").map((c) => c.type).includes(category)) {
+              setFormData({ ...formData, category, type: "Expense" })
+            }
+            break
+          case 'date':
+            setFormData({ ...formData, date: e.value })
+            break
+          default:
+            break;
+        }
+      })
 
-  //     if (segment.isFinal && formData.amount && formData.category && formData.type && formData.date) {
-  //       return createTransaction();
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [segment])
+      if (segment.isFinal && formData.amount && formData.category && formData.type && formData.date) {
+        return createTransaction();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [segment])
 
-
-  // const selectedCategories = formData.type === 'Income' ? incomeCategories : expenseCategories
 
   return (
     <Grid container spacing={2}>

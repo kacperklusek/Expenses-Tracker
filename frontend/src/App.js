@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Grid } from '@material-ui/core'
-// import { PushToTalkButton, PushToTalkButtonContainer, ErrorPanel } from '@speechly/react-ui'
+import { PushToTalkButton, PushToTalkButtonContainer, ErrorPanel } from '@speechly/react-ui'
 import { SpeechState, useSpeechContext } from '@speechly/react-client'
 import { Routes, Route } from "react-router-dom";
 
@@ -15,11 +15,9 @@ const pages = ["Expenses", "Categories", "History", "Balance"];
 
 const App = () => {
 
-  const { user } = useContext(ExpenseTrackerContext)
   const classes = useStyles()
   const { speechState } = useSpeechContext()
   const main = useRef(null)
-  const [buttonPopup, setButtonPopup] = useState(true);
 
   const executeScroll = () => main.current.scrollIntoView();
 
@@ -49,6 +47,10 @@ const App = () => {
             </div>
         }/>
       </Routes>
+      <PushToTalkButtonContainer>
+        <PushToTalkButton/>
+        <ErrorPanel/>
+      </PushToTalkButtonContainer>
     </div>
   )
 }

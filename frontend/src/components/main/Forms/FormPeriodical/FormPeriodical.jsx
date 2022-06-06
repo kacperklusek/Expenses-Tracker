@@ -1,7 +1,5 @@
-// import transitions from '@material-ui/core/styles/transitions'
-import { TextField, Typography, Checkbox, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
+import { TextField, Checkbox, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core'
 import { CustomizedSnackbar } from '../../../Snackbar/Snackbar'
-// import { useSpeechContext } from '@speechly/react-client'
 import { v4 as uuidv4 } from "uuid"
 import React, { useState, useContext } from 'react'
 import { ExpenseTrackerContext } from '../../../../context/context'
@@ -25,7 +23,6 @@ const FormPeriodical = () => {
   const [formData, setFormData] = useState(initialState)
   const [finalDate, setFinalDate] = useState(false)
   const { addPeriodicalTransaction, user } = useContext(ExpenseTrackerContext)
-  // const {segment} = useSpeechContext() TODO add voice controlled periodical payments
   const [open, setOpen] = useState(false)
   const [categoryFormOpen, setCategoryFormOpen] = useState(false)
 
@@ -68,9 +65,6 @@ const FormPeriodical = () => {
     <Grid container spacing={2}>
       <CustomizedSnackbar open={open} setOpen={setOpen} />
       <Grid item xs={12}>
-        {/* <Typography align="center" variant='subtitle2' gutterBottom>
-        {segment && segment.words.map((word) => word.value).join(' ')}
-      </Typography> */}
       </Grid>
       <Grid item xs={6}>
         <FormControl fullWidth>

@@ -9,7 +9,7 @@ import Cookies from "js-cookie"
 
 const LoginPopup = () => {
   const navigate = useNavigate();
-  const { addUser, setUser, url } = useContext(ExpenseTrackerContext)
+  const {setUser, url } = useContext(ExpenseTrackerContext)
   const [formData, setFormData] = useState({email: "", password: "", name:"", surname:""});
   const [register, setRegister] = useState(false);
   const [loginError, setLoginError] = useState(false)

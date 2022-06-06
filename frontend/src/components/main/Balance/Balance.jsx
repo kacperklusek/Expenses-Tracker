@@ -2,8 +2,6 @@ import React, { useState, useContext } from 'react'
 
 import { TextField, Typography, CardContent, Divider, Button, Grid } from '@material-ui/core'
 import { ExpenseTrackerContext } from '../../../context/context'
-// import { v4 as uuidv4 } from "uuid"
-// import { useSpeechContext } from '@speechly/react-client'
 
 import formatDate from '../../../utils/formatDate'
 import useStyles from "./styles"

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { List as MUIList, ListItem, ListItemAvatar, ListItemText, Avatar, ListItemSecondaryAction, IconButton, Slide, Button, Typography } from "@material-ui/core"
 import { Delete, MoneyOff } from '@material-ui/icons'
-// import useInfiniteScroll from 'react-infinite-scroll-hook'
 
 import { ExpenseTrackerContext, saveUser } from '../../../context/context'
 import useStyles from "./styles"
@@ -12,11 +11,6 @@ const List = () => {
   const { deleteTransaction, user, url, setUser } = useContext(ExpenseTrackerContext)
   const [hasMore, setHasMore] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
-
-  // const [lastElementRef] = useInfiniteScroll(
-  //   hasMore ? loadMore : () => {},
-  //   isFetching
-  // )
 
   const loadMore = () => {
     setIsFetching(true)
@@ -42,7 +36,6 @@ const List = () => {
   return (
     <MUIList dense={false} className={classes.listReg}>
       {user.transactions.map((transaction) => (
-        // <Slide direction='down' in mountOnEnter unmountOnExit ref={lastElementRef} key={transaction.id}>
         <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
           <ListItem>
             <ListItemAvatar>

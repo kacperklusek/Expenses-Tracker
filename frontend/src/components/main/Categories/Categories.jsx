@@ -31,7 +31,6 @@ const List = () => {
         </Tabs>
       <MUIList dense={false} className={classes.list}>
         {user.categories.filter(c => c.type === type).sort( compare ).map((category) => (
-          // <Slide direction='down' in mountOnEnter unmountOnExit ref={lastElementRef} key={transaction.id}>
           <Slide direction='down' in mountOnEnter unmountOnExit key={category.id}>
           <ListItem>
               <ListItemText 

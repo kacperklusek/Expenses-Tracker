@@ -37,7 +37,6 @@ const MenuProps = {
 const History = () => {
   const classes = useStyles()
   const { deleteTransaction, user, url} = useContext(ExpenseTrackerContext)
-  // const [type, setType] = useState("Income")
   const [formData, setFormData] = useState(INITIAL_STATE)
   const [transactions, setTranasactions] = useState([])
   const [isFetching, setIsFetching] = useState(false)
@@ -66,7 +65,6 @@ const History = () => {
       })
       .catch(err => {
         console.log(err)
-        // TODO add error message
         setIsFetching(false)
       })
   }
@@ -180,7 +178,6 @@ const History = () => {
     <CardContent>
       <MUIList dense={false} className={classes.list}>
         {transactions.map((transaction) => (
-          // <Slide direction='down' in mountOnEnter unmountOnExit ref={lastElementRef} key={transaction.id}>
           <Slide direction='down' in mountOnEnter unmountOnExit key={transaction.id}>
             <ListItem>
               <ListItemAvatar>
